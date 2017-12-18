@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.3" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.3">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.3" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="java," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="Synchronized关键字1，用于方法上2，用于代码块上: 必须通过一个对象引用作为参数。只有一个线程可以访问那个对象的synchronized代码（代码 块或方法）。通常，我们将使用this关键字引用执行该方法的对象。synchronized (this) {} synchronized()保护代码块时，如果使用对象作为参数，而不是thisJVM可以保证只有一个线程可以访问那个对象保护所有的">
+<meta name="keywords" content="java">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java并发之线程同步">
+<meta property="og:url" content="http://yoursite.com/2017/12/17/Java并发之线程同步/index.html">
+<meta property="og:site_name" content="Owen&#39;s Blog">
+<meta property="og:description" content="Synchronized关键字1，用于方法上2，用于代码块上: 必须通过一个对象引用作为参数。只有一个线程可以访问那个对象的synchronized代码（代码 块或方法）。通常，我们将使用this关键字引用执行该方法的对象。synchronized (this) {} synchronized()保护代码块时，如果使用对象作为参数，而不是thisJVM可以保证只有一个线程可以访问那个对象保护所有的">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2017-12-17T07:28:08.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java并发之线程同步">
+<meta name="twitter:description" content="Synchronized关键字1，用于方法上2，用于代码块上: 必须通过一个对象引用作为参数。只有一个线程可以访问那个对象的synchronized代码（代码 块或方法）。通常，我们将使用this关键字引用执行该方法的对象。synchronized (this) {} synchronized()保护代码块时，如果使用对象作为参数，而不是thisJVM可以保证只有一个线程可以访问那个对象保护所有的">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.3',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/12/17/Java并发之线程同步/"/>
+
+
+
+
+
+  <title>Java并发之线程同步 | Owen's Blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Owen's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Owen's Blog</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/12/17/Java并发之线程同步/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Owen Yu">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Owen's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Java并发之线程同步</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-12-17T11:19:13+08:00">
+                2017-12-17
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/java/" itemprop="url" rel="index">
+                    <span itemprop="name">java</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="Synchronized关键字"><a href="#Synchronized关键字" class="headerlink" title="Synchronized关键字"></a>Synchronized关键字</h1><p>1，用于方法上<br>2，用于代码块上: 必须通过一个对象引用作为参数。只有一个线程可以访问那个对象的synchronized代码（代码 块或方法）。通常，我们将使用this关键字引用执行该方法的对象。<br>synchronized (this) {<br>}</p>
+<p>synchronized()保护代码块时，如果使用对象作为参数，而不是this<br>JVM可以保证只有一个线程可以访问那个对象保护所有的代码块<br>如: 我们用一个对象来控制name1属性的访问。所以，在任意时刻，只有一个线程能修改该属性。用另一个对象来控制 name2属性的访问。所以，在任意时刻，只有一个线程能修改这个属性。<br>但是可能有两个线程同时运行，一个修改 name1属性而另一个修改name2属性。</p>
+<p>synchronized和下面方法一起使用:<br>nitifyAll() 通知所有的wait线程返回<br>nitify() 通知一个wait的线程返回<br>wait() 会释放对象锁; 被notity后，还需要等待锁，才能返回</p>
+<h1 id="使用Lock同步代码块"><a href="#使用Lock同步代码块" class="headerlink" title="使用Lock同步代码块"></a>使用Lock同步代码块</h1><p>1,接口Lock, 实现类ReentrantLock<br>2,它允许以一种更灵活的方式来构建同步块。<br>3,Lock 接口比synchronized关键字提供更多额外的功能。新功能之一是实现的tryLock()方法。这种方法试图获取锁的控制权并且如果它不能获取该锁，是因为其他线程在使用这个锁，它将返回这个锁。<br>4,使用synchronized关键字，当线程A试图执行synchronized代码块，如果线程B正在执行它，那么线程A将<strong>只能阻塞</strong>直到线程B执行完synchronized代码块。使用Lock锁，你可以执行tryLock()方法，这个方法返回一个 Boolean值表示，是否有其他线程锁。代码可以更加灵活。<br>5,当有多个读和一个写时，Lock接口允许读写操作分离。<br>6,Lock接口比synchronized关键字提供更好的性能。  </p>
+<p>ReentrantLock其它方法:<br>  getOwner() 方法来返回线程的名字。<br>   ReentrantLock类保护方法getQueuedThreads()， 返回正在等待执行临界区的线程list。<br>   hasQueuedThreads():此方法返回 Boolean 值表明是否有线程在等待获取此锁<br>   getQueueLength(): 此方法返回等待获取此锁的线程数量<br>   isLocked(): 此方法返回 Boolean 值表明此锁是否为某个线程所拥有<br>   isFair(): 此方法返回 Boolean 值表明锁的 fair 模式是否被激活  </p>
+<h1 id="读写锁"><a href="#读写锁" class="headerlink" title="读写锁"></a>读写锁</h1><p>ReadWriteLock接口，实现类：ReentrantReadWriteLock类<br>读操作：是通过在 ReadWriteLock接口中声明的readLock()方法获取的。这个锁是实现Lock接口的一个对象，所以我们可以使用lock()， unlock() 和tryLock()方法。<br>写操作：是通过在ReadWriteLock接口中声明的writeLock()方法获取的。这个锁是实现Lock接 口的一个对象，所以我们可以使用lock()， unlock() 和tryLock()方法。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">ReadWriteLock rwlock = new ReentrantReadWriteLock();</span><br><span class="line">//读锁</span><br><span class="line">rwlock.readLock().lock();</span><br><span class="line">//读操作......</span><br><span class="line">//释放读锁  </span><br><span class="line">rwlock.readLock().unlock();</span><br><span class="line"></span><br><span class="line">// 写锁</span><br><span class="line">rwlock.writeLock().lock();</span><br><span class="line">//写操作......</span><br><span class="line">//释放写锁  </span><br><span class="line">rwlock.writeLock().unlock();</span><br></pre></td></tr></table></figure>
+<h1 id="锁的公平性"><a href="#锁的公平性" class="headerlink" title="锁的公平性"></a>锁的公平性</h1><p>在ReentrantLock类和 ReentrantReadWriteLock类的构造器中，允许一个名为fair的boolean类型参数，它允许你来控制这些类的行为。<br>false值: 默认值，启用非公平模式。在这个模式中，当有多个线程正在等待一把锁（ReentrantLock或者 ReentrantReadWriteLock），这个锁必须选择它们中间的一个来获得进入临界区，选择任意一个是<strong>没有任何标准</strong>的。<br>true值: 开启公平模式。在这个模式中，当有多个线程正在等待一把锁（ReentrantLock或者ReentrantReadWriteLock），这个锁必须选择它们 中间的一个来获得进入临界区，<strong>它将选择等待时间最长的线程</strong>。</p>
+<h1 id="Condition"><a href="#Condition" class="headerlink" title="Condition"></a>Condition</h1><p>Condition接口提供一种机制，阻塞一个线程和唤醒一个被阻塞的线程。<br>Lock接口中的newCondition()方法来创建。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Lock lock = new ReentrantLock();</span><br><span class="line">Condition condition = lock.newCondition();</span><br></pre></td></tr></table></figure>
+<p>当一个线程在一个condition上调用await()方法时，它将自动释放锁的控制，并进入Condition变量的等待队列。</p>
+<p>当一个线程在一个condition上调用signal()或signallAll()方法，一个或者全部在这个condition上等待的线程将被唤醒，从await方法返回。<strong>返回前必须获得锁</strong>。  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">Lock lock = new ReentrantLock();</span><br><span class="line">Condition condition = lock.newCondition();</span><br><span class="line"></span><br><span class="line">public void conditionWait() throws InterruptedException &#123;</span><br><span class="line">    lock.lock();</span><br><span class="line">    try &#123;</span><br><span class="line">        //....</span><br><span class="line">        condition.await();//await方法后，线程将释放锁，并且将自己沉睡，等待唤醒</span><br><span class="line">    &#125;finally &#123;</span><br><span class="line">        lock.unlock();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">public void conditionSignal()&#123;</span><br><span class="line">    lock.lock();//上面的线程释放锁后，这里可以获得锁</span><br><span class="line">    try &#123;</span><br><span class="line">        //...</span><br><span class="line">        condition.signal();//调用Condition的signal方法，唤醒上面线程，但此时锁没有释放，线程1没有真正唤醒</span><br><span class="line">    &#125;finally &#123;</span><br><span class="line">        lock.unlock();//释放锁，线程1将被执行</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Condition接口提供不同版本的await()方法，如下：<br>1,await(long time, TimeUnit unit):这个线程将会一直睡眠直到：<br>(1)它被中断<br>(2)其他线程在这个condition上调用singal()或signalAll()方法<br>(3)指定的时间已经过了<br>(4)TimeUnit类是一个枚举类型如下的常量：<br>DAYS,HOURS, MICROSECONDS, MILLISECONDS, MINUTES, NANOSECONDS,SECONDS<br>2,awaitUninterruptibly():这个线程将不会被中断，一直睡眠直到其他线程调用signal()或signalAll()方法<br>3,awaitUntil(Date date):这个线程将会一直睡眠直到：<br>(1)它被中断<br>(2)其他线程在这个condition上调用singal()或signalAll()方法<br>(3)指定的日期已经到了  </p>
+<h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1><p>并发中文网: <a href="http://ifeve.com/" target="_blank" rel="noopener">http://ifeve.com/</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/java/" rel="tag"># java</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/12/17/Java并发之线程管理/" rel="next" title="Java并发之线程管理">
+                <i class="fa fa-chevron-left"></i> Java并发之线程管理
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/12/18/Java并发之死锁/" rel="prev" title="Java并发之死锁">
+                Java并发之死锁 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Owen Yu</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          <div class="links-of-author motion-element">
+            
+          </div>
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Synchronized关键字"><span class="nav-text"><a href="#Synchronized&#x5173;&#x952E;&#x5B57;" class="headerlink" title="Synchronized&#x5173;&#x952E;&#x5B57;"></a>Synchronized&#x5173;&#x952E;&#x5B57;</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#使用Lock同步代码块"><span class="nav-text"><a href="#&#x4F7F;&#x7528;Lock&#x540C;&#x6B65;&#x4EE3;&#x7801;&#x5757;" class="headerlink" title="&#x4F7F;&#x7528;Lock&#x540C;&#x6B65;&#x4EE3;&#x7801;&#x5757;"></a>&#x4F7F;&#x7528;Lock&#x540C;&#x6B65;&#x4EE3;&#x7801;&#x5757;</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#读写锁"><span class="nav-text"><a href="#&#x8BFB;&#x5199;&#x9501;" class="headerlink" title="&#x8BFB;&#x5199;&#x9501;"></a>&#x8BFB;&#x5199;&#x9501;</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#锁的公平性"><span class="nav-text"><a href="#&#x9501;&#x7684;&#x516C;&#x5E73;&#x6027;" class="headerlink" title="&#x9501;&#x7684;&#x516C;&#x5E73;&#x6027;"></a>&#x9501;&#x7684;&#x516C;&#x5E73;&#x6027;</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Condition"><span class="nav-text"><a href="#Condition" class="headerlink" title="Condition"></a>Condition</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考资料"><span class="nav-text"><a href="#&#x53C2;&#x8003;&#x8D44;&#x6599;" class="headerlink" title="&#x53C2;&#x8003;&#x8D44;&#x6599;"></a>&#x53C2;&#x8003;&#x8D44;&#x6599;</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Owen Yu</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.3</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.3"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.3"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.3"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
