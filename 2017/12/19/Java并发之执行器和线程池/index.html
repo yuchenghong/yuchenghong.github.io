@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="简单聊一下死锁。当一个线程永远的持有一个锁，并且其他线程都尝试获得这个锁，就会发生死锁。如果发生死锁，通常JVM没有办法自动恢复，只能重启。对线上系统来说，这是灾难性的。 死锁的发生场景、例子1，最简单的例子:线程A持有锁1并尝试获得锁2，线程B占有锁2并尝试获得锁1。两个线程将会永远的等待下去。   2，多个线程，持有锁的同时，尝试获得对方的锁，形成一个复杂的环状依赖。这些线程都将无限的等待。">
+<meta name="description" content="执行器Executor用来管理Thread对象，简化并发编程Executor的子接口是ExecutorServiceExecutorService的实现类实际上就是线程池   简单的例子:1234567ExecutorService executorService = Executors.newFixedThreadPool(4);executorService.execute(new Runna">
 <meta name="keywords" content="java">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Java并发之死锁">
-<meta property="og:url" content="http://yoursite.com/2017/12/18/Java并发之死锁/index.html">
+<meta property="og:title" content="Java并发之执行器和线程池">
+<meta property="og:url" content="http://yoursite.com/2017/12/19/Java并发之执行器和线程池/index.html">
 <meta property="og:site_name" content="Owen&#39;s Blog">
-<meta property="og:description" content="简单聊一下死锁。当一个线程永远的持有一个锁，并且其他线程都尝试获得这个锁，就会发生死锁。如果发生死锁，通常JVM没有办法自动恢复，只能重启。对线上系统来说，这是灾难性的。 死锁的发生场景、例子1，最简单的例子:线程A持有锁1并尝试获得锁2，线程B占有锁2并尝试获得锁1。两个线程将会永远的等待下去。   2，多个线程，持有锁的同时，尝试获得对方的锁，形成一个复杂的环状依赖。这些线程都将无限的等待。">
+<meta property="og:description" content="执行器Executor用来管理Thread对象，简化并发编程Executor的子接口是ExecutorServiceExecutorService的实现类实际上就是线程池   简单的例子:1234567ExecutorService executorService = Executors.newFixedThreadPool(4);executorService.execute(new Runna">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-12-18T14:50:46.000Z">
+<meta property="og:updated_time" content="2017-12-19T15:31:55.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Java并发之死锁">
-<meta name="twitter:description" content="简单聊一下死锁。当一个线程永远的持有一个锁，并且其他线程都尝试获得这个锁，就会发生死锁。如果发生死锁，通常JVM没有办法自动恢复，只能重启。对线上系统来说，这是灾难性的。 死锁的发生场景、例子1，最简单的例子:线程A持有锁1并尝试获得锁2，线程B占有锁2并尝试获得锁1。两个线程将会永远的等待下去。   2，多个线程，持有锁的同时，尝试获得对方的锁，形成一个复杂的环状依赖。这些线程都将无限的等待。">
+<meta name="twitter:title" content="Java并发之执行器和线程池">
+<meta name="twitter:description" content="执行器Executor用来管理Thread对象，简化并发编程Executor的子接口是ExecutorServiceExecutorService的实现类实际上就是线程池   简单的例子:1234567ExecutorService executorService = Executors.newFixedThreadPool(4);executorService.execute(new Runna">
 
 
 
@@ -120,13 +120,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2017/12/18/Java并发之死锁/"/>
+  <link rel="canonical" href="http://yoursite.com/2017/12/19/Java并发之执行器和线程池/"/>
 
 
 
 
 
-  <title>Java并发之死锁 | Owen's Blog</title>
+  <title>Java并发之执行器和线程池 | Owen's Blog</title>
   
 
 
@@ -263,7 +263,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/12/18/Java并发之死锁/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/12/19/Java并发之执行器和线程池/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Owen Yu">
@@ -280,7 +280,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Java并发之死锁</h1>
+          <h1 class="post-title" itemprop="name headline">Java并发之执行器和线程池</h1>
         
 
         <div class="post-meta">
@@ -292,8 +292,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-12-18T22:48:58+08:00">
-                2017-12-18
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-12-19T23:31:22+08:00">
+                2017-12-19
               </time>
             
 
@@ -352,22 +352,16 @@
       
 
       
-        <p>简单聊一下死锁。<br>当一个线程永远的持有一个锁，并且其他线程都尝试获得这个锁，就会发生死锁。<br>如果发生死锁，通常JVM没有办法自动恢复，只能重启。对线上系统来说，这是灾难性的。</p>
-<h1 id="死锁的发生场景、例子"><a href="#死锁的发生场景、例子" class="headerlink" title="死锁的发生场景、例子"></a>死锁的发生场景、例子</h1><p>1，最简单的例子:<br>线程A持有锁1并尝试获得锁2，线程B占有锁2并尝试获得锁1。两个线程将会永远的等待下去。  </p>
-<p>2，多个线程，持有锁的同时，尝试获得对方的锁，形成一个复杂的环状依赖。这些线程都将无限的等待。  </p>
-<p>3，两个线程以不同的顺序获得相同的锁<br>举个栗子：<br>一段转账的代码，从A账号转钱到B账号，为了保持数据一致性，操作前需要对着两个账号加锁，避免账号被同步更改而产生错误的数据。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">public void transfer(Account fromAccount,Account toAccount)&#123;</span><br><span class="line">    synchronized(fromAccount)&#123;</span><br><span class="line">        synchronized(toAccount)&#123;</span><br><span class="line">            //转账动作. </span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>上面这段代码，是什么情况下会死锁呢？<br>这样一个场景：<br>A线程：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">transfer(account1,account2)</span><br></pre></td></tr></table></figure></p>
-<p>B线程：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">transfer(account2,account1)</span><br></pre></td></tr></table></figure></p>
-<p>A获得account1的锁，等待account2的锁； B获得account2的锁，等待account1的锁。 两个线程无限的等待。<br>这就是“两个线程以不同的顺序获得相同的锁”。  </p>
-<h1 id="死锁产生的条件"><a href="#死锁产生的条件" class="headerlink" title="死锁产生的条件"></a>死锁产生的条件</h1><p>死锁的发生必须满足4个条件：<br>1，资源是不能共享的，同一资源不能被不同的线程占有<br>2，任务持有一个资源的同时，等待别的任务的资源<br>3，资源不能抢占，不能强行从其他线程抢占<br>4，产生循环等待  </p>
-<p>要发生死锁，上面的条件缺一不可。 </p>
-<h1 id="如何避免死锁"><a href="#如何避免死锁" class="headerlink" title="如何避免死锁"></a>如何避免死锁</h1><p>上面说到了死锁的发生必须要满足四个条件。<br>所以避免死锁，我们可以从这四点着手，打破其中一条即可。  </p>
-<p>在多线程下，可以从几个方面：<br>1，加锁顺序：对于同样的资源，其加锁顺序一样。<br>比如上面的转账例子，</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">transfer(account1,account2)</span><br><span class="line">transfer(account2,account1)</span><br></pre></td></tr></table></figure>
-<p>这两个调用，不管参数的顺序如何，在加锁时，保证account1,account2是同样的顺序，就一定不会有死锁。<br>具体实现，可以设计一个哈希算法，来保证加锁的顺序。代码如下，这样对于同样的账号，不管是在哪个参数传进来，其hash值大小固定，加锁顺序就一定是一样的。 <strong>问题完美解决。</strong>  </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">public void transfer(Account fromAccount,Account toAccount)&#123;</span><br><span class="line">    int fromHash = hash(fromAccount);</span><br><span class="line">    int toHash = hash(toAccount);</span><br><span class="line">    </span><br><span class="line">    if(fromHash&gt;toHash)&#123;</span><br><span class="line">        synchronized(fromAccount)&#123;</span><br><span class="line">            synchronized(toAccount)&#123;</span><br><span class="line">                //转账动作. </span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;else&#123;</span><br><span class="line">        synchronized(toAccount)&#123;</span><br><span class="line">            synchronized(fromAccount)&#123;</span><br><span class="line">                //转账动作. </span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>2，加锁时间<br>使用Lock对象来加锁， 在尝试获取锁的时候，加上时间参数，超过时间就放弃操作，避免永久等待。  </p>
+        <h1 id="执行器Executor"><a href="#执行器Executor" class="headerlink" title="执行器Executor"></a>执行器Executor</h1><p>用来管理Thread对象，简化并发编程<br>Executor的子接口是ExecutorService<br>ExecutorService的实现类实际上就是<strong>线程池</strong>  </p>
+<p>简单的例子:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">ExecutorService executorService = Executors.newFixedThreadPool(4);</span><br><span class="line">executorService.execute(new Runnable() &#123;</span><br><span class="line">    public void run() &#123;</span><br><span class="line">        System.out.println(Thread.currentThread().getName());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br><span class="line">executorService.shutdown();</span><br></pre></td></tr></table></figure></p>
+<h2 id="ExecutorService实现类"><a href="#ExecutorService实现类" class="headerlink" title="ExecutorService实现类"></a>ExecutorService实现类</h2><p>ThreadPoolExecutor<br>ScheduledThreadPoolExecutor  </p>
+<h2 id="创建ExecutorService"><a href="#创建ExecutorService" class="headerlink" title="创建ExecutorService"></a>创建ExecutorService</h2><p>Executors工厂类来创建：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ExecutorService executorService1 = Executors.newSingleThreadExecutor();</span><br><span class="line">ExecutorService executorService2 = Executors.newFixedThreadPool(10);</span><br><span class="line">ExecutorService executorService3 = Executors.newScheduledThreadPool(10);</span><br></pre></td></tr></table></figure></p>
+<h2 id="使用ExecutorService"><a href="#使用ExecutorService" class="headerlink" title="使用ExecutorService"></a>使用ExecutorService</h2><p>execute(Runnable)：执行Runnable<br>submit(Runnable)：执行Runnable，返回Future，这个Future可以用来检查Runnable是否已经执行完毕。<br>submit(Callable)：执行Callable，返回Future，这里的Future可以获得Callable的返回数据。  </p>
+<h2 id="Future和Callable"><a href="#Future和Callable" class="headerlink" title="Future和Callable"></a>Future和Callable</h2><p>Callable：和Runnable接口很类似。此接口有一个call()方法。在这个方法中，实现任务逻辑并返回一个结果。<br>Future：表示一个任务的生命周期，判断任务是否完成，获取Callable任务的返回结果。  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">ExecutorService executorService = Executors.newFixedThreadPool(1);</span><br><span class="line">Callable&lt;Integer&gt; task = ()-&gt;&#123;</span><br><span class="line">    try &#123;</span><br><span class="line">        Thread.sleep(1000);</span><br><span class="line">    &#125; catch (InterruptedException e) &#123;</span><br><span class="line">        e.printStackTrace();</span><br><span class="line">    &#125;</span><br><span class="line">    return 5;//返回5</span><br><span class="line">&#125;;</span><br><span class="line">Future&lt;Integer&gt; future = executorService.submit(task);</span><br><span class="line">Integer result = future.get();</span><br><span class="line">System.out.println(result);</span><br></pre></td></tr></table></figure>
+<h2 id="ExecutorService关闭"><a href="#ExecutorService关闭" class="headerlink" title="ExecutorService关闭"></a>ExecutorService关闭</h2><p>shutdown()：并不会立即关闭，但它将不再接受新的任务，而且一旦所有线程都完成了当前任务的时候， ExecutorService 将会关闭。<br>shutdownNow()：立即停止所有执行中的任务，并忽略掉那些已提交但尚未开始处理的任务。无法保证正在执行的任务的正确性。  </p>
+<h1 id="线程池"><a href="#线程池" class="headerlink" title="线程池"></a>线程池</h1><p>ThreadPoolExecutor是ExecutorService接口的一个实现。<br>一般我们可以用Executors工厂类来创建线程池，其用法和上面的讲的例子一样。<br>同时我们也可以使用ThreadPoolExecutor的构造方法</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">ExecutorService threadPoolExecutor =</span><br><span class="line">    new ThreadPoolExecutor(</span><br><span class="line">        corePoolSize,</span><br><span class="line">        maxPoolSize,</span><br><span class="line">        keepAliveTime,</span><br><span class="line">        TimeUnit.MILLISECONDS,</span><br><span class="line">        new LinkedBlockingQueue&lt;Runnable&gt;()</span><br><span class="line">    );</span><br></pre></td></tr></table></figure>
 
       
     </div>
@@ -398,8 +392,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/12/17/Java并发之线程同步/" rel="next" title="Java并发之线程同步">
-                <i class="fa fa-chevron-left"></i> Java并发之线程同步
+              <a href="/2017/12/19/Java并发之同步工具/" rel="next" title="Java并发之同步工具">
+                <i class="fa fa-chevron-left"></i> Java并发之同步工具
               </a>
             
           </div>
@@ -407,10 +401,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/12/19/Java并发之同步工具/" rel="prev" title="Java并发之同步工具">
-                Java并发之同步工具 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -544,7 +534,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#死锁的发生场景、例子"><span class="nav-text"><a href="#&#x6B7B;&#x9501;&#x7684;&#x53D1;&#x751F;&#x573A;&#x666F;&#x3001;&#x4F8B;&#x5B50;" class="headerlink" title="&#x6B7B;&#x9501;&#x7684;&#x53D1;&#x751F;&#x573A;&#x666F;&#x3001;&#x4F8B;&#x5B50;"></a>&#x6B7B;&#x9501;&#x7684;&#x53D1;&#x751F;&#x573A;&#x666F;&#x3001;&#x4F8B;&#x5B50;</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#死锁产生的条件"><span class="nav-text"><a href="#&#x6B7B;&#x9501;&#x4EA7;&#x751F;&#x7684;&#x6761;&#x4EF6;" class="headerlink" title="&#x6B7B;&#x9501;&#x4EA7;&#x751F;&#x7684;&#x6761;&#x4EF6;"></a>&#x6B7B;&#x9501;&#x4EA7;&#x751F;&#x7684;&#x6761;&#x4EF6;</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#如何避免死锁"><span class="nav-text"><a href="#&#x5982;&#x4F55;&#x907F;&#x514D;&#x6B7B;&#x9501;" class="headerlink" title="&#x5982;&#x4F55;&#x907F;&#x514D;&#x6B7B;&#x9501;"></a>&#x5982;&#x4F55;&#x907F;&#x514D;&#x6B7B;&#x9501;</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#执行器Executor"><span class="nav-text"><a href="#&#x6267;&#x884C;&#x5668;Executor" class="headerlink" title="&#x6267;&#x884C;&#x5668;Executor"></a>&#x6267;&#x884C;&#x5668;Executor</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#ExecutorService实现类"><span class="nav-text"><a href="#ExecutorService&#x5B9E;&#x73B0;&#x7C7B;" class="headerlink" title="ExecutorService&#x5B9E;&#x73B0;&#x7C7B;"></a>ExecutorService&#x5B9E;&#x73B0;&#x7C7B;</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#创建ExecutorService"><span class="nav-text"><a href="#&#x521B;&#x5EFA;ExecutorService" class="headerlink" title="&#x521B;&#x5EFA;ExecutorService"></a>&#x521B;&#x5EFA;ExecutorService</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用ExecutorService"><span class="nav-text"><a href="#&#x4F7F;&#x7528;ExecutorService" class="headerlink" title="&#x4F7F;&#x7528;ExecutorService"></a>&#x4F7F;&#x7528;ExecutorService</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Future和Callable"><span class="nav-text"><a href="#Future&#x548C;Callable" class="headerlink" title="Future&#x548C;Callable"></a>Future&#x548C;Callable</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ExecutorService关闭"><span class="nav-text"><a href="#ExecutorService&#x5173;&#x95ED;" class="headerlink" title="ExecutorService&#x5173;&#x95ED;"></a>ExecutorService&#x5173;&#x95ED;</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#线程池"><span class="nav-text"><a href="#&#x7EBF;&#x7A0B;&#x6C60;" class="headerlink" title="&#x7EBF;&#x7A0B;&#x6C60;"></a>&#x7EBF;&#x7A0B;&#x6C60;</span></a></li></ol></div>
             
 
           </div>
