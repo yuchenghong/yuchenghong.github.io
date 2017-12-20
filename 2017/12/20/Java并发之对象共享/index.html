@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="执行器Executor用来管理Thread对象，简化并发编程Executor的子接口是ExecutorServiceExecutorService的实现类实际上就是线程池   简单的例子:1234567ExecutorService executorService = Executors.newFixedThreadPool(4);executorService.execute(new Runna">
+<meta name="description" content="Java并发里面有两个很关键的点：一是，使用同步来避免多线程间同一时刻访问同样的数据。二是，线程间的通信和数据的共享。   前面的文章已经讲过了同步的机制。这篇文章会介绍数据的共享。主要从几个方面：线程间通信；原子性；可见性；重排序；   线程间通信线程间的通信，有java内存模型来控制。每个线程都有自己私有的本地内存，线程间共享的变量放在主内存。如下所示：    线程1 &amp;lt;-&amp;gt; 线程">
 <meta name="keywords" content="java">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Java并发之执行器和线程池">
-<meta property="og:url" content="http://yoursite.com/2017/12/19/Java并发之执行器和线程池/index.html">
+<meta property="og:title" content="Java并发之对象共享">
+<meta property="og:url" content="http://yoursite.com/2017/12/20/Java并发之对象共享/index.html">
 <meta property="og:site_name" content="Owen&#39;s Blog">
-<meta property="og:description" content="执行器Executor用来管理Thread对象，简化并发编程Executor的子接口是ExecutorServiceExecutorService的实现类实际上就是线程池   简单的例子:1234567ExecutorService executorService = Executors.newFixedThreadPool(4);executorService.execute(new Runna">
+<meta property="og:description" content="Java并发里面有两个很关键的点：一是，使用同步来避免多线程间同一时刻访问同样的数据。二是，线程间的通信和数据的共享。   前面的文章已经讲过了同步的机制。这篇文章会介绍数据的共享。主要从几个方面：线程间通信；原子性；可见性；重排序；   线程间通信线程间的通信，有java内存模型来控制。每个线程都有自己私有的本地内存，线程间共享的变量放在主内存。如下所示：    线程1 &amp;lt;-&amp;gt; 线程">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-12-19T15:31:55.000Z">
+<meta property="og:updated_time" content="2017-12-20T15:17:38.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Java并发之执行器和线程池">
-<meta name="twitter:description" content="执行器Executor用来管理Thread对象，简化并发编程Executor的子接口是ExecutorServiceExecutorService的实现类实际上就是线程池   简单的例子:1234567ExecutorService executorService = Executors.newFixedThreadPool(4);executorService.execute(new Runna">
+<meta name="twitter:title" content="Java并发之对象共享">
+<meta name="twitter:description" content="Java并发里面有两个很关键的点：一是，使用同步来避免多线程间同一时刻访问同样的数据。二是，线程间的通信和数据的共享。   前面的文章已经讲过了同步的机制。这篇文章会介绍数据的共享。主要从几个方面：线程间通信；原子性；可见性；重排序；   线程间通信线程间的通信，有java内存模型来控制。每个线程都有自己私有的本地内存，线程间共享的变量放在主内存。如下所示：    线程1 &amp;lt;-&amp;gt; 线程">
 
 
 
@@ -120,13 +120,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2017/12/19/Java并发之执行器和线程池/"/>
+  <link rel="canonical" href="http://yoursite.com/2017/12/20/Java并发之对象共享/"/>
 
 
 
 
 
-  <title>Java并发之执行器和线程池 | Owen's Blog</title>
+  <title>Java并发之对象共享 | Owen's Blog</title>
   
 
 
@@ -263,7 +263,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/12/19/Java并发之执行器和线程池/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/12/20/Java并发之对象共享/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Owen Yu">
@@ -280,7 +280,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Java并发之执行器和线程池</h1>
+          <h1 class="post-title" itemprop="name headline">Java并发之对象共享</h1>
         
 
         <div class="post-meta">
@@ -292,8 +292,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-12-19T23:31:22+08:00">
-                2017-12-19
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-12-20T23:16:49+08:00">
+                2017-12-20
               </time>
             
 
@@ -352,16 +352,23 @@
       
 
       
-        <h1 id="执行器Executor"><a href="#执行器Executor" class="headerlink" title="执行器Executor"></a>执行器Executor</h1><p>用来管理Thread对象，简化并发编程<br>Executor的子接口是ExecutorService<br>ExecutorService的实现类实际上就是<strong>线程池</strong>  </p>
-<p>简单的例子:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">ExecutorService executorService = Executors.newFixedThreadPool(4);</span><br><span class="line">executorService.execute(new Runnable() &#123;</span><br><span class="line">    public void run() &#123;</span><br><span class="line">        System.out.println(Thread.currentThread().getName());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br><span class="line">executorService.shutdown();</span><br></pre></td></tr></table></figure></p>
-<h2 id="ExecutorService实现类"><a href="#ExecutorService实现类" class="headerlink" title="ExecutorService实现类"></a>ExecutorService实现类</h2><p>ThreadPoolExecutor<br>ScheduledThreadPoolExecutor  </p>
-<h2 id="创建ExecutorService"><a href="#创建ExecutorService" class="headerlink" title="创建ExecutorService"></a>创建ExecutorService</h2><p>Executors工厂类来创建：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ExecutorService executorService1 = Executors.newSingleThreadExecutor();</span><br><span class="line">ExecutorService executorService2 = Executors.newFixedThreadPool(10);</span><br><span class="line">ExecutorService executorService3 = Executors.newScheduledThreadPool(10);</span><br></pre></td></tr></table></figure></p>
-<h2 id="使用ExecutorService"><a href="#使用ExecutorService" class="headerlink" title="使用ExecutorService"></a>使用ExecutorService</h2><p>execute(Runnable)：执行Runnable<br>submit(Runnable)：执行Runnable，返回Future，这个Future可以用来检查Runnable是否已经执行完毕。<br>submit(Callable)：执行Callable，返回Future，这里的Future可以获得Callable的返回数据。  </p>
-<h2 id="Future和Callable"><a href="#Future和Callable" class="headerlink" title="Future和Callable"></a>Future和Callable</h2><p>Callable：和Runnable接口很类似。此接口有一个call()方法。在这个方法中，实现任务逻辑并返回一个结果。<br>Future：表示一个任务的生命周期，判断任务是否完成，获取Callable任务的返回结果。  </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">ExecutorService executorService = Executors.newFixedThreadPool(1);</span><br><span class="line">Callable&lt;Integer&gt; task = ()-&gt;&#123;</span><br><span class="line">    try &#123;</span><br><span class="line">        Thread.sleep(1000);</span><br><span class="line">    &#125; catch (InterruptedException e) &#123;</span><br><span class="line">        e.printStackTrace();</span><br><span class="line">    &#125;</span><br><span class="line">    return 5;//返回5</span><br><span class="line">&#125;;</span><br><span class="line">Future&lt;Integer&gt; future = executorService.submit(task);</span><br><span class="line">Integer result = future.get();</span><br><span class="line">System.out.println(result);</span><br></pre></td></tr></table></figure>
-<h2 id="ExecutorService关闭"><a href="#ExecutorService关闭" class="headerlink" title="ExecutorService关闭"></a>ExecutorService关闭</h2><p>shutdown()：并不会立即关闭，但它将不再接受新的任务，而且一旦所有线程都完成了当前任务的时候， ExecutorService 将会关闭。<br>shutdownNow()：立即停止所有执行中的任务，并忽略掉那些已提交但尚未开始处理的任务。无法保证正在执行的任务的正确性。  </p>
-<h1 id="线程池"><a href="#线程池" class="headerlink" title="线程池"></a>线程池</h1><p>ThreadPoolExecutor是ExecutorService接口的一个实现。<br>一般我们可以用Executors工厂类来创建线程池，其用法和上面的讲的例子一样。<br>同时我们也可以使用ThreadPoolExecutor的构造方法</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">ExecutorService threadPoolExecutor =</span><br><span class="line">    new ThreadPoolExecutor(</span><br><span class="line">        corePoolSize,</span><br><span class="line">        maxPoolSize,</span><br><span class="line">        keepAliveTime,</span><br><span class="line">        TimeUnit.MILLISECONDS,</span><br><span class="line">        new LinkedBlockingQueue&lt;Runnable&gt;()</span><br><span class="line">    );</span><br></pre></td></tr></table></figure>
+        <p>Java并发里面有两个很关键的点：<br>一是，使用同步来避免多线程间同一时刻访问同样的数据。<br>二是，线程间的通信和数据的共享。  </p>
+<p>前面的文章已经讲过了同步的机制。<br>这篇文章会介绍数据的共享。主要从几个方面：<br>线程间通信；<br>原子性；<br>可见性；<br>重排序；  </p>
+<h1 id="线程间通信"><a href="#线程间通信" class="headerlink" title="线程间通信"></a>线程间通信</h1><p>线程间的通信，有java内存模型来控制。<br>每个线程都有自己私有的本地内存，线程间共享的变量放在主内存。如下所示：   </p>
+<p>线程1 &lt;-&gt; 线程1的本地内存 &lt;-&gt; 主内存<br>线程2 &lt;-&gt; 线程2的本地内存 &lt;-&gt; 主内存  </p>
+<p>主要过程：<br>1， 线程1把本地内存更新的数据刷新到主内存；<br>2， 线程2到主内存读取线程1的数据，更新到线程2的本地内存中。  </p>
+<h1 id="原子性"><a href="#原子性" class="headerlink" title="原子性"></a>原子性</h1><p>原子性是指一个操作不可分割。<br>基本类型除long,double之外，读写操作，是原子的，线程安全, 如i=1是原子的；<br>long和double，JVM分离成了2个32位的操作，所以对long和double的读写，非原子非线程安全；<br>int i++等操作非原子非线程安全；  </p>
+<p>volatile修饰的变量的读写，是原子操作，如volatile=1; 但volatile的复合操作，如volatile++，是非原子的；<br>不可变对象(final)的初始化，原子的和线程安全的。  </p>
+<h2 id="原子变量类"><a href="#原子变量类" class="headerlink" title="原子变量类"></a>原子变量类</h2><p>java提供原子操作的类：java.util.concurrent.atomic包下面。<br>如：AtomicInteger, 能够原子读-改-写操作，比锁轻量级，性能更高。  </p>
+<h1 id="可见性"><a href="#可见性" class="headerlink" title="可见性"></a>可见性</h1><p>可见性是指一个线程修改了对象的状态之后，另一个线程能够马上看到状态的变化。<br>可以通过下面的方式保证可见性：<br>final：初始化final字段确保可见性<br>volatile：读写volatile字段确保可见性.给一个变量加上volatile修饰符，就相当于：每一个线程中一旦这个值发生了变化就马上刷新回主存，使得各个线程取出的值相同。<br>synchronized：同步块内读写字段确保可见性<br>happens before：遵守happen before次序可见性(下一节详细讲解)   </p>
+<h1 id="重排序"><a href="#重排序" class="headerlink" title="重排序"></a>重排序</h1><p>重排序是指为了提高性能，编译器和处理器会对指令进行重排序。<br>在多线程编程中，我们常常会看到明明写到后面的程序，居然比行数更靠前的程序先执行，这就是程序进行了重排序。  </p>
+<p>重排序是有一定的规则的：  </p>
+<h2 id="1，数据依赖性"><a href="#1，数据依赖性" class="headerlink" title="1，数据依赖性"></a>1，数据依赖性</h2><p>两个操作访问同一变量，其中一个操作为写操作，那么两个操作间就存在依赖性。<br>如： a=1; b=a;(写变量a，在读取a)<br>对于有依赖性的指令，不会进行重排序。  </p>
+<h2 id="2，as-if-serial语义"><a href="#2，as-if-serial语义" class="headerlink" title="2，as-if-serial语义"></a>2，as-if-serial语义</h2><p>不管怎么排序，程序的执行结果都不能改变。<br>为了遵守as-if_serial语义，对于有依赖性的操作，不会重排序；<br>如果操作之间不存在依赖，则可能被重排序。<br>如：  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">int a=1; //操作1</span><br><span class="line">int b=2; //操作2</span><br><span class="line">int c=a+b; //操作3</span><br></pre></td></tr></table></figure>
+<p>操作3一定在1，2之后， 而1可能在2之前，也可能在2之后。  </p>
+<h2 id="3-happens-before"><a href="#3-happens-before" class="headerlink" title="3, happens before"></a>3, happens before</h2><p>从jdk5开始，java使用happens before来描述可见性。<br>如果一个操作对另一个操作可见，则两个操作之间必须要存在happens before关系。  </p>
+<p>其规则总结如下：<br>1）如果A一定在B之前发生，则A和B存在happens before;<br>2) 写volatile变量一定发生在后续对它的读之前;<br>3) Thread.start一定发生在线程中的动作之前;<br>4) 一个线程调用另一个线程的interrupt一定发生在另一线程发现中断之前;<br>5) 一个对象的构造函数结束一定发生在对象的finalizer之前;<br>6) 传递性: A发生在B之前，B发生在C之前，A一定发生在C之前。  </p>
 
       
     </div>
@@ -392,8 +399,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/12/19/Java并发之同步工具/" rel="next" title="Java并发之同步工具">
-                <i class="fa fa-chevron-left"></i> Java并发之同步工具
+              <a href="/2017/12/19/Java并发之执行器和线程池/" rel="next" title="Java并发之执行器和线程池">
+                <i class="fa fa-chevron-left"></i> Java并发之执行器和线程池
               </a>
             
           </div>
@@ -401,10 +408,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/12/20/Java并发之对象共享/" rel="prev" title="Java并发之对象共享">
-                Java并发之对象共享 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -538,7 +541,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#执行器Executor"><span class="nav-text"><a href="#&#x6267;&#x884C;&#x5668;Executor" class="headerlink" title="&#x6267;&#x884C;&#x5668;Executor"></a>&#x6267;&#x884C;&#x5668;Executor</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#ExecutorService实现类"><span class="nav-text"><a href="#ExecutorService&#x5B9E;&#x73B0;&#x7C7B;" class="headerlink" title="ExecutorService&#x5B9E;&#x73B0;&#x7C7B;"></a>ExecutorService&#x5B9E;&#x73B0;&#x7C7B;</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#创建ExecutorService"><span class="nav-text"><a href="#&#x521B;&#x5EFA;ExecutorService" class="headerlink" title="&#x521B;&#x5EFA;ExecutorService"></a>&#x521B;&#x5EFA;ExecutorService</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用ExecutorService"><span class="nav-text"><a href="#&#x4F7F;&#x7528;ExecutorService" class="headerlink" title="&#x4F7F;&#x7528;ExecutorService"></a>&#x4F7F;&#x7528;ExecutorService</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Future和Callable"><span class="nav-text"><a href="#Future&#x548C;Callable" class="headerlink" title="Future&#x548C;Callable"></a>Future&#x548C;Callable</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ExecutorService关闭"><span class="nav-text"><a href="#ExecutorService&#x5173;&#x95ED;" class="headerlink" title="ExecutorService&#x5173;&#x95ED;"></a>ExecutorService&#x5173;&#x95ED;</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#线程池"><span class="nav-text"><a href="#&#x7EBF;&#x7A0B;&#x6C60;" class="headerlink" title="&#x7EBF;&#x7A0B;&#x6C60;"></a>&#x7EBF;&#x7A0B;&#x6C60;</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#线程间通信"><span class="nav-text"><a href="#&#x7EBF;&#x7A0B;&#x95F4;&#x901A;&#x4FE1;" class="headerlink" title="&#x7EBF;&#x7A0B;&#x95F4;&#x901A;&#x4FE1;"></a>&#x7EBF;&#x7A0B;&#x95F4;&#x901A;&#x4FE1;</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#原子性"><span class="nav-text"><a href="#&#x539F;&#x5B50;&#x6027;" class="headerlink" title="&#x539F;&#x5B50;&#x6027;"></a>&#x539F;&#x5B50;&#x6027;</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#原子变量类"><span class="nav-text"><a href="#&#x539F;&#x5B50;&#x53D8;&#x91CF;&#x7C7B;" class="headerlink" title="&#x539F;&#x5B50;&#x53D8;&#x91CF;&#x7C7B;"></a>&#x539F;&#x5B50;&#x53D8;&#x91CF;&#x7C7B;</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#可见性"><span class="nav-text"><a href="#&#x53EF;&#x89C1;&#x6027;" class="headerlink" title="&#x53EF;&#x89C1;&#x6027;"></a>&#x53EF;&#x89C1;&#x6027;</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#重排序"><span class="nav-text"><a href="#&#x91CD;&#x6392;&#x5E8F;" class="headerlink" title="&#x91CD;&#x6392;&#x5E8F;"></a>&#x91CD;&#x6392;&#x5E8F;</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1，数据依赖性"><span class="nav-text"><a href="#1&#xFF0C;&#x6570;&#x636E;&#x4F9D;&#x8D56;&#x6027;" class="headerlink" title="1&#xFF0C;&#x6570;&#x636E;&#x4F9D;&#x8D56;&#x6027;"></a>1&#xFF0C;&#x6570;&#x636E;&#x4F9D;&#x8D56;&#x6027;</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2，as-if-serial语义"><span class="nav-text"><a href="#2&#xFF0C;as-if-serial&#x8BED;&#x4E49;" class="headerlink" title="2&#xFF0C;as-if-serial&#x8BED;&#x4E49;"></a>2&#xFF0C;as-if-serial&#x8BED;&#x4E49;</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-happens-before"><span class="nav-text"><a href="#3-happens-before" class="headerlink" title="3, happens before"></a>3, happens before</span></a></li></ol></li></ol></div>
             
 
           </div>
