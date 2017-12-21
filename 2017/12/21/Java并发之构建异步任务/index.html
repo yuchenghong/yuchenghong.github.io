@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="Java并发里面有两个很关键的点：一是，使用同步来避免多线程间同一时刻访问同样的数据。二是，线程间的通信和数据的共享。   前面的文章已经讲过了同步的机制。这篇文章会介绍数据的共享。主要从几个方面：线程间通信；原子性；可见性；重排序；   线程间通信线程间的通信，有java内存模型来控制。每个线程都有自己私有的本地内存，线程间共享的变量放在主内存。如下所示：    线程1 &amp;lt;-&amp;gt; 线程">
+<meta name="description" content="有个小朋友表示我写的并发文章，不够细，看了还是不太明白。我的写作水平实在有限，泪奔。后面我尽量写的详细简单，尽量多讲点例子。   异步对应的就是同步。同步的程序大家写的非常的多，同步就是指程序对所有的操作都是串行的处理。一系列的任务A,B,C,D…必须一个一个的处理。而异步则是可以并发同时处理多个任务。   举个栗子吧。某个网站的用户提交注册需要以下几步：1，调用用户服务，写入数据库-需要1s2，">
 <meta name="keywords" content="java">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Java并发之对象共享">
-<meta property="og:url" content="http://yoursite.com/2017/12/20/Java并发之对象共享/index.html">
+<meta property="og:title" content="Java并发之构建异步任务">
+<meta property="og:url" content="http://yoursite.com/2017/12/21/Java并发之构建异步任务/index.html">
 <meta property="og:site_name" content="Owen&#39;s Blog">
-<meta property="og:description" content="Java并发里面有两个很关键的点：一是，使用同步来避免多线程间同一时刻访问同样的数据。二是，线程间的通信和数据的共享。   前面的文章已经讲过了同步的机制。这篇文章会介绍数据的共享。主要从几个方面：线程间通信；原子性；可见性；重排序；   线程间通信线程间的通信，有java内存模型来控制。每个线程都有自己私有的本地内存，线程间共享的变量放在主内存。如下所示：    线程1 &amp;lt;-&amp;gt; 线程">
+<meta property="og:description" content="有个小朋友表示我写的并发文章，不够细，看了还是不太明白。我的写作水平实在有限，泪奔。后面我尽量写的详细简单，尽量多讲点例子。   异步对应的就是同步。同步的程序大家写的非常的多，同步就是指程序对所有的操作都是串行的处理。一系列的任务A,B,C,D…必须一个一个的处理。而异步则是可以并发同时处理多个任务。   举个栗子吧。某个网站的用户提交注册需要以下几步：1，调用用户服务，写入数据库-需要1s2，">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-12-20T15:17:38.000Z">
+<meta property="og:updated_time" content="2017-12-21T14:17:51.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Java并发之对象共享">
-<meta name="twitter:description" content="Java并发里面有两个很关键的点：一是，使用同步来避免多线程间同一时刻访问同样的数据。二是，线程间的通信和数据的共享。   前面的文章已经讲过了同步的机制。这篇文章会介绍数据的共享。主要从几个方面：线程间通信；原子性；可见性；重排序；   线程间通信线程间的通信，有java内存模型来控制。每个线程都有自己私有的本地内存，线程间共享的变量放在主内存。如下所示：    线程1 &amp;lt;-&amp;gt; 线程">
+<meta name="twitter:title" content="Java并发之构建异步任务">
+<meta name="twitter:description" content="有个小朋友表示我写的并发文章，不够细，看了还是不太明白。我的写作水平实在有限，泪奔。后面我尽量写的详细简单，尽量多讲点例子。   异步对应的就是同步。同步的程序大家写的非常的多，同步就是指程序对所有的操作都是串行的处理。一系列的任务A,B,C,D…必须一个一个的处理。而异步则是可以并发同时处理多个任务。   举个栗子吧。某个网站的用户提交注册需要以下几步：1，调用用户服务，写入数据库-需要1s2，">
 
 
 
@@ -120,13 +120,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2017/12/20/Java并发之对象共享/"/>
+  <link rel="canonical" href="http://yoursite.com/2017/12/21/Java并发之构建异步任务/"/>
 
 
 
 
 
-  <title>Java并发之对象共享 | Owen's Blog</title>
+  <title>Java并发之构建异步任务 | Owen's Blog</title>
   
 
 
@@ -263,7 +263,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/12/20/Java并发之对象共享/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/12/21/Java并发之构建异步任务/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Owen Yu">
@@ -280,7 +280,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Java并发之对象共享</h1>
+          <h1 class="post-title" itemprop="name headline">Java并发之构建异步任务</h1>
         
 
         <div class="post-meta">
@@ -292,8 +292,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-12-20T23:16:49+08:00">
-                2017-12-20
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-12-21T22:17:15+08:00">
+                2017-12-21
               </time>
             
 
@@ -352,23 +352,17 @@
       
 
       
-        <p>Java并发里面有两个很关键的点：<br>一是，使用同步来避免多线程间同一时刻访问同样的数据。<br>二是，线程间的通信和数据的共享。  </p>
-<p>前面的文章已经讲过了同步的机制。<br>这篇文章会介绍数据的共享。主要从几个方面：<br>线程间通信；<br>原子性；<br>可见性；<br>重排序；  </p>
-<h1 id="线程间通信"><a href="#线程间通信" class="headerlink" title="线程间通信"></a>线程间通信</h1><p>线程间的通信，有java内存模型来控制。<br>每个线程都有自己私有的本地内存，线程间共享的变量放在主内存。如下所示：   </p>
-<p>线程1 &lt;-&gt; 线程1的本地内存 &lt;-&gt; 主内存<br>线程2 &lt;-&gt; 线程2的本地内存 &lt;-&gt; 主内存  </p>
-<p>主要过程：<br>1， 线程1把本地内存更新的数据刷新到主内存；<br>2， 线程2到主内存读取线程1的数据，更新到线程2的本地内存中。  </p>
-<h1 id="原子性"><a href="#原子性" class="headerlink" title="原子性"></a>原子性</h1><p>原子性是指一个操作不可分割。<br>基本类型除long,double之外，读写操作，是原子的，线程安全, 如i=1是原子的；<br>long和double，JVM分离成了2个32位的操作，所以对long和double的读写，非原子非线程安全；<br>int i++等操作非原子非线程安全；  </p>
-<p>volatile修饰的变量的读写，是原子操作，如volatile=1; 但volatile的复合操作，如volatile++，是非原子的；<br>不可变对象(final)的初始化，原子的和线程安全的。  </p>
-<h2 id="原子变量类"><a href="#原子变量类" class="headerlink" title="原子变量类"></a>原子变量类</h2><p>java提供原子操作的类：java.util.concurrent.atomic包下面。<br>如：AtomicInteger, 能够原子读-改-写操作，比锁轻量级，性能更高。  </p>
-<h1 id="可见性"><a href="#可见性" class="headerlink" title="可见性"></a>可见性</h1><p>可见性是指一个线程修改了对象的状态之后，另一个线程能够马上看到状态的变化。<br>可以通过下面的方式保证可见性：<br>final：初始化final字段确保可见性<br>volatile：读写volatile字段确保可见性.给一个变量加上volatile修饰符，就相当于：每一个线程中一旦这个值发生了变化就马上刷新回主存，使得各个线程取出的值相同。<br>synchronized：同步块内读写字段确保可见性<br>happens before：遵守happen before次序可见性(下一节详细讲解)   </p>
-<h1 id="重排序"><a href="#重排序" class="headerlink" title="重排序"></a>重排序</h1><p>重排序是指为了提高性能，编译器和处理器会对指令进行重排序。<br>在多线程编程中，我们常常会看到明明写到后面的程序，居然比行数更靠前的程序先执行，这就是程序进行了重排序。  </p>
-<p>重排序是有一定的规则的：  </p>
-<h2 id="1，数据依赖性"><a href="#1，数据依赖性" class="headerlink" title="1，数据依赖性"></a>1，数据依赖性</h2><p>两个操作访问同一变量，其中一个操作为写操作，那么两个操作间就存在依赖性。<br>如： a=1; b=a;(写变量a，在读取a)<br>对于有依赖性的指令，不会进行重排序。  </p>
-<h2 id="2，as-if-serial语义"><a href="#2，as-if-serial语义" class="headerlink" title="2，as-if-serial语义"></a>2，as-if-serial语义</h2><p>不管怎么排序，程序的执行结果都不能改变。<br>为了遵守as-if_serial语义，对于有依赖性的操作，不会重排序；<br>如果操作之间不存在依赖，则可能被重排序。<br>如：  </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">int a=1; //操作1</span><br><span class="line">int b=2; //操作2</span><br><span class="line">int c=a+b; //操作3</span><br></pre></td></tr></table></figure>
-<p>操作3一定在1，2之后， 而1可能在2之前，也可能在2之后。  </p>
-<h2 id="3-happens-before"><a href="#3-happens-before" class="headerlink" title="3, happens before"></a>3, happens before</h2><p>从jdk5开始，java使用happens before来描述可见性。<br>如果一个操作对另一个操作可见，则两个操作之间必须要存在happens before关系。  </p>
-<p>其规则总结如下：<br>1）如果A一定在B之前发生，则A和B存在happens before;<br>2) 写volatile变量一定发生在后续对它的读之前;<br>3) Thread.start一定发生在线程中的动作之前;<br>4) 一个线程调用另一个线程的interrupt一定发生在另一线程发现中断之前;<br>5) 一个对象的构造函数结束一定发生在对象的finalizer之前;<br>6) 传递性: A发生在B之前，B发生在C之前，A一定发生在C之前。  </p>
+        <p>有个小朋友表示我写的并发文章，不够细，看了还是不太明白。<br>我的写作水平实在有限，泪奔。<br>后面我尽量写的详细简单，尽量多讲点例子。  </p>
+<p>异步对应的就是同步。<br>同步的程序大家写的非常的多，同步就是指程序对所有的操作都是串行的处理。一系列的任务A,B,C,D…必须一个一个的处理。<br>而异步则是可以并发同时处理多个任务。  </p>
+<p>举个栗子吧。<br>某个网站的用户提交注册需要以下几步：<br>1，调用用户服务，写入数据库-需要1s<br>2，发送邮件-需要1s<br>3, 发送短信-需要1s</p>
+<p>如果是同步的程序，串行执行，则用户一共需要等代3s<br>但是我们注意到，这三个任务相互之间没有依赖关系，可以改成异步并发的来执行，则用户等待的时间一共只需要1s.  </p>
+<p>异步通常代表着更高的性能和更好的系统资源利用率。  </p>
+<p>有几种方法可以构建异步的任务<br>1， Thread和Runnable接口。<br>Runnable是最基本任务表现形式，但不能返回值。 </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">Thread thread1 = new Thread(</span><br><span class="line">    new Runnable()&#123;</span><br><span class="line">        public void run()&#123;</span><br><span class="line">            //写入数据库</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">);</span><br><span class="line">thread1.start();</span><br><span class="line">Thread thread2 = new Thread(</span><br><span class="line">    new Runnable()&#123;</span><br><span class="line">        public void run()&#123;</span><br><span class="line">            //发送邮件</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">);</span><br><span class="line">thread4.start();</span><br><span class="line">Thread thread3 = new Thread(</span><br><span class="line">    new Runnable()&#123;</span><br><span class="line">        public void run()&#123;</span><br><span class="line">            //发送邮件</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">);</span><br><span class="line">thread3.start();</span><br></pre></td></tr></table></figure>
+<p>2， Future<br>Future表示一个任务的生命周期：<br>1）提供了相应的方法来判断任务是否已经完成或者取消；<br>2）还能获取任务的结果；<br>3）可以取消任务。  </p>
+<p>最常用的是通过ExecutorService的submit方法提交任务，会返回一个Future。<br>ExecutorService的submit方法可以提交Runnable和Callable任务；<br>对于Callable任务，Future的get方法可以获得返回值。  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">ExecutorService executorService = Executors.newFixedThreadPool(10);</span><br><span class="line">//定义Callable, 返回一个结果</span><br><span class="line">Callable&lt;Integer&gt; task = ()-&gt;&#123;</span><br><span class="line">    try &#123;</span><br><span class="line">        Thread.sleep(5000);</span><br><span class="line">    &#125; catch (InterruptedException e) &#123;</span><br><span class="line">        e.printStackTrace();</span><br><span class="line">    &#125;</span><br><span class="line">    return 5;</span><br><span class="line">&#125;;</span><br><span class="line">Future&lt;Integer&gt; future = executorService.submit(task);</span><br><span class="line">Integer result = future.get();</span><br><span class="line">System.out.println(result);</span><br></pre></td></tr></table></figure>
+<p>在实际的开发中，对于耗时比较长得操作，都可以考虑异步的方式来执行。<br>一方面可以大大提高资源利用率和性能；<br>并且对于用户交互的任务，可以大大减少用户的等待时间，提升用户体验。  </p>
 
       
     </div>
@@ -399,8 +393,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/12/19/Java并发之执行器和线程池/" rel="next" title="Java并发之执行器和线程池">
-                <i class="fa fa-chevron-left"></i> Java并发之执行器和线程池
+              <a href="/2017/12/21/修改github作者信息/" rel="next" title="修改github作者信息">
+                <i class="fa fa-chevron-left"></i> 修改github作者信息
               </a>
             
           </div>
@@ -408,10 +402,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/12/21/Java函数式编程入门/" rel="prev" title="Java函数式编程入门">
-                Java函数式编程入门 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -463,17 +453,8 @@
       
 
       
-        <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
-            文章目录
-          </li>
-          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
-            站点概览
-          </li>
-        </ul>
-      
 
-      <section class="site-overview-wrap sidebar-panel">
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -535,22 +516,6 @@
         </div>
       </section>
 
-      
-      <!--noindex-->
-        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
-          <div class="post-toc">
-
-            
-              
-            
-
-            
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#线程间通信"><span class="nav-text"><a href="#&#x7EBF;&#x7A0B;&#x95F4;&#x901A;&#x4FE1;" class="headerlink" title="&#x7EBF;&#x7A0B;&#x95F4;&#x901A;&#x4FE1;"></a>&#x7EBF;&#x7A0B;&#x95F4;&#x901A;&#x4FE1;</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#原子性"><span class="nav-text"><a href="#&#x539F;&#x5B50;&#x6027;" class="headerlink" title="&#x539F;&#x5B50;&#x6027;"></a>&#x539F;&#x5B50;&#x6027;</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#原子变量类"><span class="nav-text"><a href="#&#x539F;&#x5B50;&#x53D8;&#x91CF;&#x7C7B;" class="headerlink" title="&#x539F;&#x5B50;&#x53D8;&#x91CF;&#x7C7B;"></a>&#x539F;&#x5B50;&#x53D8;&#x91CF;&#x7C7B;</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#可见性"><span class="nav-text"><a href="#&#x53EF;&#x89C1;&#x6027;" class="headerlink" title="&#x53EF;&#x89C1;&#x6027;"></a>&#x53EF;&#x89C1;&#x6027;</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#重排序"><span class="nav-text"><a href="#&#x91CD;&#x6392;&#x5E8F;" class="headerlink" title="&#x91CD;&#x6392;&#x5E8F;"></a>&#x91CD;&#x6392;&#x5E8F;</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1，数据依赖性"><span class="nav-text"><a href="#1&#xFF0C;&#x6570;&#x636E;&#x4F9D;&#x8D56;&#x6027;" class="headerlink" title="1&#xFF0C;&#x6570;&#x636E;&#x4F9D;&#x8D56;&#x6027;"></a>1&#xFF0C;&#x6570;&#x636E;&#x4F9D;&#x8D56;&#x6027;</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2，as-if-serial语义"><span class="nav-text"><a href="#2&#xFF0C;as-if-serial&#x8BED;&#x4E49;" class="headerlink" title="2&#xFF0C;as-if-serial&#x8BED;&#x4E49;"></a>2&#xFF0C;as-if-serial&#x8BED;&#x4E49;</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-happens-before"><span class="nav-text"><a href="#3-happens-before" class="headerlink" title="3, happens before"></a>3, happens before</span></a></li></ol></li></ol></div>
-            
-
-          </div>
-        </section>
-      <!--/noindex-->
       
 
       
