@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.3" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.3">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.3" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="java," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="在Lambda表达式里，经常会有这样的代码 1artist -&amp;gt; artist.getName() 就是lambda表达式里面调用了一个已存在的方法: getName()java8可以直接通过方法引用来简写lambda表达式中已经存在的方法，这种特性就叫方法引用。 1Artist::getName ::前面是对象，后面是方法名称。   方法引用语法Classname::methodName">
+<meta name="keywords" content="java">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java8之方法引用">
+<meta property="og:url" content="http://yoursite.com/2017/12/23/Java8之方法引用/index.html">
+<meta property="og:site_name" content="Owen&#39;s Blog">
+<meta property="og:description" content="在Lambda表达式里，经常会有这样的代码 1artist -&amp;gt; artist.getName() 就是lambda表达式里面调用了一个已存在的方法: getName()java8可以直接通过方法引用来简写lambda表达式中已经存在的方法，这种特性就叫方法引用。 1Artist::getName ::前面是对象，后面是方法名称。   方法引用语法Classname::methodName">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2017-12-23T13:06:08.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java8之方法引用">
+<meta name="twitter:description" content="在Lambda表达式里，经常会有这样的代码 1artist -&amp;gt; artist.getName() 就是lambda表达式里面调用了一个已存在的方法: getName()java8可以直接通过方法引用来简写lambda表达式中已经存在的方法，这种特性就叫方法引用。 1Artist::getName ::前面是对象，后面是方法名称。   方法引用语法Classname::methodName">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.3',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/12/23/Java8之方法引用/"/>
+
+
+
+
+
+  <title>Java8之方法引用 | Owen's Blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Owen's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Owen's Blog</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/12/23/Java8之方法引用/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Owen Yu">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Owen's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Java8之方法引用</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-12-23T21:05:09+08:00">
+                2017-12-23
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/java/" itemprop="url" rel="index">
+                    <span itemprop="name">java</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>在Lambda表达式里，经常会有这样的代码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">artist -&gt; artist.getName()</span><br></pre></td></tr></table></figure>
+<p>就是lambda表达式里面调用了一个<strong>已存在的方法</strong>: getName()<br>java8可以直接通过方法引用来简写lambda表达式中已经存在的方法，这种特性就叫方法引用。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Artist::getName</span><br></pre></td></tr></table></figure>
+<p>::前面是对象，后面是方法名称。  </p>
+<h1 id="方法引用语法"><a href="#方法引用语法" class="headerlink" title="方法引用语法"></a>方法引用语法</h1><p>Classname::methodName  </p>
+<h1 id="分类"><a href="#分类" class="headerlink" title="分类"></a>分类</h1><p>方法引用有四种类型:<br>类名::静态方法名;<br>对象引用名::实例方法名;<br>类名::实例方法名;<br>构造方法，类名::new  </p>
+<p>下面分别来介绍</p>
+<h2 id="1，类名-静态方法名"><a href="#1，类名-静态方法名" class="headerlink" title="1，类名::静态方法名"></a>1，类名::静态方法名</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">//Integer对象有一个静态方法</span><br><span class="line">public static int compare(int x, int y) &#123;</span><br><span class="line">    return (x &lt; y) ? -1 : ((x == y) ? 0 : 1);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">//普通lambda调用</span><br><span class="line">List&lt;Integer&gt; integers = Arrays.asList(23,12,100,98);</span><br><span class="line">integers.sort((arg1,arg2) -&gt; Integer.compare(arg1,arg2));</span><br><span class="line">System.out.println(integers);</span><br><span class="line"></span><br><span class="line">//方法引用调用</span><br><span class="line">List&lt;Integer&gt; integers = Arrays.asList(23,12,100,98);</span><br><span class="line">integers.sort(Integer::compare);</span><br><span class="line">System.out.println(integers);</span><br></pre></td></tr></table></figure>
+<h2 id="2，对象引用名-实例方法名"><a href="#2，对象引用名-实例方法名" class="headerlink" title="2，对象引用名::实例方法名"></a>2，对象引用名::实例方法名</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">//新创建一个类，可以对Integer进行排序</span><br><span class="line">public class IntegerComparator &#123;</span><br><span class="line">    public int compare(Integer arg1,Integer arg2)&#123;</span><br><span class="line">        return arg1-arg2;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">//普通lambda调用</span><br><span class="line">IntegerComparator integerComparator = new IntegerComparator();</span><br><span class="line">List&lt;Integer&gt; integers = Arrays.asList(23,12,100,98);</span><br><span class="line">integers.sort((arg1,arg2)-&gt;integerComparator.compare(arg1,arg2));</span><br><span class="line"></span><br><span class="line">//方法引用调用</span><br><span class="line">IntegerComparator integerComparator = new IntegerComparator();</span><br><span class="line">List&lt;Integer&gt; integers = Arrays.asList(23,12,100,98);</span><br><span class="line">integers.sort(integerComparator::compare);</span><br></pre></td></tr></table></figure>
+<h2 id="3，类名-实例方法名"><a href="#3，类名-实例方法名" class="headerlink" title="3，类名::实例方法名"></a>3，类名::实例方法名</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">//在看Integer对象有这样非静态的方法</span><br><span class="line">public int compareTo(Integer anotherInteger) &#123;</span><br><span class="line">    return compare(this.value, anotherInteger.value);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">//普通lambda调用</span><br><span class="line">List&lt;Integer&gt; integers = Arrays.asList(23,12,100,98);</span><br><span class="line">integers.sort((arg1,arg2) -&gt; arg1.compareTo(arg2));</span><br><span class="line"></span><br><span class="line">//方法引用调用</span><br><span class="line">integers.sort(Integer::compareTo);</span><br></pre></td></tr></table></figure>
+<h2 id="4，构造方法，类名-new"><a href="#4，构造方法，类名-new" class="headerlink" title="4，构造方法，类名::new"></a>4，构造方法，类名::new</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">public class MethodReference &#123;</span><br><span class="line">    //定义一个方法</span><br><span class="line">    public String getResult(String string,Function&lt;String,String&gt; function)&#123;</span><br><span class="line">        return function.apply(string);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        MethodReference methodReference = new MethodReference();</span><br><span class="line">        //普通lambda调用</span><br><span class="line">        String result = methodReference.getResult(&quot;hello 1&quot;, (arg) -&gt; new String(arg));</span><br><span class="line">        System.out.println(result);</span><br><span class="line">        </span><br><span class="line">        //方法引用调用</span><br><span class="line">        String result2 = methodReference.getResult(&quot;hello 2&quot;, String::new);</span><br><span class="line">        System.out.println(result2);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>程序结果：<br>hello 1<br>hello 2</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/java/" rel="tag"># java</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/12/23/Java8之Stream/" rel="next" title="Java8之Stream">
+                <i class="fa fa-chevron-left"></i> Java8之Stream
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Owen Yu</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">14</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          <div class="links-of-author motion-element">
+            
+          </div>
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#方法引用语法"><span class="nav-text"><a href="#&#x65B9;&#x6CD5;&#x5F15;&#x7528;&#x8BED;&#x6CD5;" class="headerlink" title="&#x65B9;&#x6CD5;&#x5F15;&#x7528;&#x8BED;&#x6CD5;"></a>&#x65B9;&#x6CD5;&#x5F15;&#x7528;&#x8BED;&#x6CD5;</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#分类"><span class="nav-text"><a href="#&#x5206;&#x7C7B;" class="headerlink" title="&#x5206;&#x7C7B;"></a>&#x5206;&#x7C7B;</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1，类名-静态方法名"><span class="nav-text"><a href="#1&#xFF0C;&#x7C7B;&#x540D;-&#x9759;&#x6001;&#x65B9;&#x6CD5;&#x540D;" class="headerlink" title="1&#xFF0C;&#x7C7B;&#x540D;::&#x9759;&#x6001;&#x65B9;&#x6CD5;&#x540D;"></a>1&#xFF0C;&#x7C7B;&#x540D;::&#x9759;&#x6001;&#x65B9;&#x6CD5;&#x540D;</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2，对象引用名-实例方法名"><span class="nav-text"><a href="#2&#xFF0C;&#x5BF9;&#x8C61;&#x5F15;&#x7528;&#x540D;-&#x5B9E;&#x4F8B;&#x65B9;&#x6CD5;&#x540D;" class="headerlink" title="2&#xFF0C;&#x5BF9;&#x8C61;&#x5F15;&#x7528;&#x540D;::&#x5B9E;&#x4F8B;&#x65B9;&#x6CD5;&#x540D;"></a>2&#xFF0C;&#x5BF9;&#x8C61;&#x5F15;&#x7528;&#x540D;::&#x5B9E;&#x4F8B;&#x65B9;&#x6CD5;&#x540D;</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3，类名-实例方法名"><span class="nav-text"><a href="#3&#xFF0C;&#x7C7B;&#x540D;-&#x5B9E;&#x4F8B;&#x65B9;&#x6CD5;&#x540D;" class="headerlink" title="3&#xFF0C;&#x7C7B;&#x540D;::&#x5B9E;&#x4F8B;&#x65B9;&#x6CD5;&#x540D;"></a>3&#xFF0C;&#x7C7B;&#x540D;::&#x5B9E;&#x4F8B;&#x65B9;&#x6CD5;&#x540D;</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4，构造方法，类名-new"><span class="nav-text"><a href="#4&#xFF0C;&#x6784;&#x9020;&#x65B9;&#x6CD5;&#xFF0C;&#x7C7B;&#x540D;-new" class="headerlink" title="4&#xFF0C;&#x6784;&#x9020;&#x65B9;&#x6CD5;&#xFF0C;&#x7C7B;&#x540D;::new"></a>4&#xFF0C;&#x6784;&#x9020;&#x65B9;&#x6CD5;&#xFF0C;&#x7C7B;&#x540D;::new</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Owen Yu</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.3</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.3"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.3"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.3"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
