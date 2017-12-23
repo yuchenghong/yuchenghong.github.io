@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.3" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.3">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.3" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="java," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="Java8中的Stream是对集合对象功能的增强。Stream API和Lambda表达式极大的提高对集合类操作编程效率和程序可读性。   内部迭代先看看外部迭代:  通过外部的迭代器来遍历集合。比如我们传统的遍历集合的方式就是外部迭代。传统的for循环，也是外部的迭代。123456789Iterator&amp;lt;Artist&amp;gt; iterator = allArtists.iterator()">
+<meta name="keywords" content="java">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java8之Stream">
+<meta property="og:url" content="http://yoursite.com/2017/12/23/Java8之Stream/index.html">
+<meta property="og:site_name" content="Owen&#39;s Blog">
+<meta property="og:description" content="Java8中的Stream是对集合对象功能的增强。Stream API和Lambda表达式极大的提高对集合类操作编程效率和程序可读性。   内部迭代先看看外部迭代:  通过外部的迭代器来遍历集合。比如我们传统的遍历集合的方式就是外部迭代。传统的for循环，也是外部的迭代。123456789Iterator&amp;lt;Artist&amp;gt; iterator = allArtists.iterator()">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2017-12-23T08:29:03.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java8之Stream">
+<meta name="twitter:description" content="Java8中的Stream是对集合对象功能的增强。Stream API和Lambda表达式极大的提高对集合类操作编程效率和程序可读性。   内部迭代先看看外部迭代:  通过外部的迭代器来遍历集合。比如我们传统的遍历集合的方式就是外部迭代。传统的for循环，也是外部的迭代。123456789Iterator&amp;lt;Artist&amp;gt; iterator = allArtists.iterator()">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.3',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/12/23/Java8之Stream/"/>
+
+
+
+
+
+  <title>Java8之Stream | Owen's Blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Owen's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Owen's Blog</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/12/23/Java8之Stream/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Owen Yu">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Owen's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Java8之Stream</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-12-23T16:27:50+08:00">
+                2017-12-23
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/java/" itemprop="url" rel="index">
+                    <span itemprop="name">java</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>Java8中的Stream是对集合对象功能的增强。<br>Stream API和Lambda表达式极大的提高对集合类操作编程效率和程序可读性。  </p>
+<h1 id="内部迭代"><a href="#内部迭代" class="headerlink" title="内部迭代"></a>内部迭代</h1><p>先看看外部迭代:  通过外部的迭代器来遍历集合。<br>比如我们传统的遍历集合的方式就是外部迭代。<br>传统的for循环，也是外部的迭代。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">Iterator&lt;Artist&gt; iterator = allArtists.iterator();</span><br><span class="line">while(iterator.hasNext()) &#123;</span><br><span class="line">    Artist artist = iterator.next();</span><br><span class="line">    //do something</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">for(Artist artist:allArtists)&#123;</span><br><span class="line">    //do something</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>内部迭代: 不依赖于外面的迭代器，完全通过集合本身和函数式接口来把元素取出来. </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">List&lt;Integer&gt; list = Arrays.asList(1,2,3,4,5,6,7,8);</span><br><span class="line">list.forEach((Integer i) -&gt; &#123;</span><br><span class="line">    System.out.println(i);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<h1 id="什么是Stream"><a href="#什么是Stream" class="headerlink" title="什么是Stream:"></a>什么是Stream:</h1><p>Stream 是用函数式编程方式在集合类上进行复杂操作的工具。</p>
+<h1 id="简单的例子"><a href="#简单的例子" class="headerlink" title="简单的例子"></a>简单的例子</h1><p>上代码，直观点。<br>统计list里面，”Lon”的数量：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">List&lt;String&gt; list = new ArrayList&lt;&gt;();</span><br><span class="line">list.add(&quot;Lon&quot;);</span><br><span class="line">list.add(&quot;SH&quot;);</span><br><span class="line">list.add(&quot;BJ&quot;);</span><br><span class="line">list.add(&quot;Lon&quot;);</span><br><span class="line">long count = list.stream().filter(arts -&gt; arts.equals(&quot;Lon&quot;)).count();</span><br></pre></td></tr></table></figure></p>
+<h1 id="Stream构成"><a href="#Stream构成" class="headerlink" title="Stream构成"></a>Stream构成</h1><p>1，源: 集合数据源<br>2，零个或多个中间操作：比如上面的fileter()就是中间操作。<br>3，终止操作：示例的count()  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">stream.xxx().yyy().zzz().count()</span><br></pre></td></tr></table></figure>
+<p>Stream操作的分类<br>1，惰性求值<br>2，及早求值</p>
+<p>在 Java 中调用一个方法， 计算机会随即执行操作： 比如， System.out.println(“Hello World”); 会在终端上输出一条信息。 Stream 里的一些方法却略有不同。<br>比如：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">list.stream().filter(arts -&gt; arts.equals(&quot;Lon&quot;));</span><br></pre></td></tr></table></figure>
+<p>这行代码并未做什么实际性的工作， filter只刻画出了 Stream， 但没有产生新的集合。<br>像filter 这样只描述 Stream，最终不产生新集合的方法叫作<strong>惰性求值</strong>；<br>而像 count 这样最终会从 Stream 产生值的方法叫作<strong>及早求值</strong>。  </p>
+<p>看下面的代码，由于使用了惰性求值，并不会打印任何信息。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">list.stream().filter(&#123;</span><br><span class="line">    System.out.println(arts);</span><br><span class="line">    arts -&gt; arts.equals(&quot;Lon&quot;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></p>
+<p>当调用到终止操作.count()时，上面的程序才会有信息打印出来。  </p>
+<h1 id="流的操作"><a href="#流的操作" class="headerlink" title="流的操作"></a>流的操作</h1><p>常见的操作可以归类如下。<br>1，Intermediate中间操作：<br>map (mapToInt, flatMap 等)、 filter、 distinct、 sorted、 peek、 limit、 skip、 parallel、 sequential、 unordered<br>2，Terminal终止操作：<br>forEach、 forEachOrdered、 toArray、 reduce、 collect、 min、 max、 count、 anyMatch、 allMatch、 noneMatch、 findFirst、 findAny、 iterator<br>3，Short-circuiting： 需要在遍历中途停止操作，比如查找第一个满足条件的元素。我们只需要处理流的一部分，而不是所有的流，以返回结果。这与计算使用and运算符链接的大型布尔表达式类似：只要一个表达式返回false，我们可以推断整个表达式是假的，而不计算它。<br>下面是Short-circuiting操作列表：<br>anyMatch、 allMatch、 noneMatch、 findFirst、 findAny、 limit  </p>
+<h1 id="Stream方法列表"><a href="#Stream方法列表" class="headerlink" title="Stream方法列表"></a>Stream方法列表</h1><p>1, collect(toList())<br>由Stream值生成一个List, 是及早求值操作。</p>
+<p>2, map:把 input Stream 的每一个元素，映射成 output Stream 的另外一个元素。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">List&lt;String&gt; output = wordList.stream().</span><br><span class="line">map(String::toUpperCase).//每个都转换成大写</span><br><span class="line">collect(Collectors.toList());</span><br><span class="line"></span><br><span class="line">List&lt;Integer&gt; nums = Arrays.asList(1, 2, 3, 4);</span><br><span class="line">List&lt;Integer&gt; squareNums = nums.stream().</span><br><span class="line">map(n -&gt; n * n).//把每个元素平方</span><br><span class="line">collect(Collectors.toList());</span><br></pre></td></tr></table></figure>
+<p>3, filter<br>filter 对原始 Stream 进行某项测试，通过测试的元素被留下来生成一个新 Stream。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Integer[] sixNums = &#123;1, 2, 3, 4, 5, 6&#125;;</span><br><span class="line">Integer[] evens = Stream.of(sixNums).filter(n -&gt; n%2 == 0).toArray(Integer[]::new);</span><br><span class="line"></span><br><span class="line">List&lt;String&gt; output = reader.lines().</span><br><span class="line"> flatMap(line -&gt; Stream.of(line.split(REGEXP))).</span><br><span class="line"> filter(word -&gt; word.length() &gt; 0).</span><br><span class="line"> collect(Collectors.toList());</span><br></pre></td></tr></table></figure>
+<p>4, flatmap<br>map 生成的是个 1:1 映射，每个输入元素，都按照规则转换成为另外一个元素。还有一些场景，是一对多映射关系的，这时需要 flatMap。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Stream&lt;List&lt;Integer&gt;&gt; inputStream = Stream.of(</span><br><span class="line"> Arrays.asList(1),</span><br><span class="line"> Arrays.asList(2, 3),</span><br><span class="line"> Arrays.asList(4, 5, 6)</span><br><span class="line"> );</span><br><span class="line">Stream&lt;Integer&gt; outputStream = inputStream.flatMap((childList) -&gt; childList.stream());</span><br></pre></td></tr></table></figure>
+<p>flatMap 把 input Stream 中的层级结构扁平化，就是将最底层元素抽出来放到一起，最终 output 的新 Stream 里面已经没有 List 了，都是直接的数字。</p>
+<p>5, min/max/distinct: 最小值/最大值/去重复的值.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">List&lt;String&gt; words = br.lines().</span><br><span class="line"> flatMap(line -&gt; Stream.of(line.split(&quot; &quot;))).</span><br><span class="line"> filter(word -&gt; word.length() &gt; 0).</span><br><span class="line"> map(String::toLowerCase).</span><br><span class="line"> distinct().//去重复值</span><br><span class="line"> sorted().</span><br><span class="line"> collect(Collectors.toList());</span><br></pre></td></tr></table></figure>
+<p>6, reduce<br>这个方法的主要作用是把 Stream 元素组合起来。它提供一个起始值（种子），然后依照运算规则（BinaryOperator），和前面 Stream 的第一个、第二个、第 n 个元素组合。从这个意义上说，字符串拼接、数值的 sum、min、max、average 都是特殊的 reduce。例如 Stream 的 sum 就相当于</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Stream&lt;Integer&gt; integers = Stream.of(4, 5, 6);</span><br><span class="line">Integer sum = integers.reduce(5, (a, b) -&gt; a+b); //起始值为5，求和操作, 结果是：20</span><br><span class="line">//或</span><br><span class="line">Integer sum = integers.reduce(0, Integer::sum);</span><br><span class="line"></span><br><span class="line">sumValue = Stream.of(1, 2, 3, 4).reduce(Integer::sum).get(); // 求和，sumValue = 10, 无起始值</span><br></pre></td></tr></table></figure>
+<p>7, forEach<br>forEach 是 terminal 操作，因此它执行后，Stream 的元素就被“消费”掉了，你无法对一个 Stream 进行两次 terminal 运算。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">stream.forEach(element -&gt; doOneThing(element));</span><br></pre></td></tr></table></figure>
+<p>8, peek<br>对每个元素执行操作并返回一个新的 Stream</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Stream.of(&quot;one&quot;, &quot;two&quot;, &quot;three&quot;, &quot;four&quot;)</span><br><span class="line"> .filter(e -&gt; e.length() &gt; 3)</span><br><span class="line"> .peek(e -&gt; System.out.println(&quot;Filtered value: &quot; + e))</span><br><span class="line"> .map(String::toUpperCase)</span><br><span class="line"> .peek(e -&gt; System.out.println(&quot;Mapped value: &quot; + e))</span><br><span class="line"> .collect(Collectors.toList());</span><br></pre></td></tr></table></figure>
+<p>9, findFirst<br>这是一个 termimal 兼 short-circuiting 操作，它总是返回 Stream 的第一个元素，或者空。</p>
+<p>10, limit/skip<br>limit 返回 Stream 的前面 n 个元素；skip 则是扔掉前 n 个元素</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">map(Person::getName).limit(10).skip(3).collect(Collectors.toList());</span><br></pre></td></tr></table></figure>
+<p>11, sorted<br>对 Stream 的排序通过 sorted 进行，它比数组的排序更强之处在于你可以首先对 Stream 进行各类 map、filter、limit、skip 甚至 distinct 来减少元素数量后，再排序，这能帮助程序明显缩短执行时间。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">List&lt;Person&gt; persons = new ArrayList();</span><br><span class="line"> for (int i = 1; i &lt;= 5; i++) &#123;</span><br><span class="line"> Person person = new Person(i, &quot;name&quot; + i);</span><br><span class="line"> persons.add(person);</span><br><span class="line"> &#125;</span><br><span class="line">List&lt;Person&gt; personList2 = persons.stream().limit(2).sorted((p1, p2) -&gt; p1.getName().compareTo(p2.getName())).collect(Collectors.toList());</span><br><span class="line">System.out.println(personList2);</span><br></pre></td></tr></table></figure>
+<p>12, Match<br>Stream 有三个 match 方法，从语义上说：<br>allMatch：Stream 中全部元素符合传入的 predicate，返回 true<br>anyMatch：Stream 中只要有一个元素符合传入的 predicate，返回 true<br>noneMatch：Stream 中没有一个元素符合传入的 predicate，返回 true<br>例如 allMatch 只要一个元素不满足条件，就 skip 剩下的所有元素，返回 false。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">List&lt;Person&gt; persons = new ArrayList();</span><br><span class="line">persons.add(new Person(1, &quot;name&quot; + 1, 10));</span><br><span class="line">persons.add(new Person(2, &quot;name&quot; + 2, 21));</span><br><span class="line">persons.add(new Person(3, &quot;name&quot; + 3, 34));</span><br><span class="line">persons.add(new Person(4, &quot;name&quot; + 4, 6));</span><br><span class="line">persons.add(new Person(5, &quot;name&quot; + 5, 55));</span><br><span class="line">boolean isAllAdult = persons.stream().</span><br><span class="line"> allMatch(p -&gt; p.getAge() &gt; 18);</span><br><span class="line">System.out.println(&quot;All are adult? &quot; + isAllAdult);</span><br><span class="line">boolean isThereAnyChild = persons.stream().</span><br><span class="line"> anyMatch(p -&gt; p.getAge() &lt; 12);</span><br><span class="line">System.out.println(&quot;Any child? &quot; + isThereAnyChild);</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/java/" rel="tag"># java</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/12/23/Java8之函数式接口/" rel="next" title="Java8之函数式接口">
+                <i class="fa fa-chevron-left"></i> Java8之函数式接口
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Owen Yu</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          <div class="links-of-author motion-element">
+            
+          </div>
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#内部迭代"><span class="nav-text"><a href="#&#x5185;&#x90E8;&#x8FED;&#x4EE3;" class="headerlink" title="&#x5185;&#x90E8;&#x8FED;&#x4EE3;"></a>&#x5185;&#x90E8;&#x8FED;&#x4EE3;</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#什么是Stream"><span class="nav-text"><a href="#&#x4EC0;&#x4E48;&#x662F;Stream" class="headerlink" title="&#x4EC0;&#x4E48;&#x662F;Stream:"></a>&#x4EC0;&#x4E48;&#x662F;Stream:</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#简单的例子"><span class="nav-text"><a href="#&#x7B80;&#x5355;&#x7684;&#x4F8B;&#x5B50;" class="headerlink" title="&#x7B80;&#x5355;&#x7684;&#x4F8B;&#x5B50;"></a>&#x7B80;&#x5355;&#x7684;&#x4F8B;&#x5B50;</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Stream构成"><span class="nav-text"><a href="#Stream&#x6784;&#x6210;" class="headerlink" title="Stream&#x6784;&#x6210;"></a>Stream&#x6784;&#x6210;</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#流的操作"><span class="nav-text"><a href="#&#x6D41;&#x7684;&#x64CD;&#x4F5C;" class="headerlink" title="&#x6D41;&#x7684;&#x64CD;&#x4F5C;"></a>&#x6D41;&#x7684;&#x64CD;&#x4F5C;</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Stream方法列表"><span class="nav-text"><a href="#Stream&#x65B9;&#x6CD5;&#x5217;&#x8868;" class="headerlink" title="Stream&#x65B9;&#x6CD5;&#x5217;&#x8868;"></a>Stream&#x65B9;&#x6CD5;&#x5217;&#x8868;</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Owen Yu</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.3</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.3"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.3"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.3"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

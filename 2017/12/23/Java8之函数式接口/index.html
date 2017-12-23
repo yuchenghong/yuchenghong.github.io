@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="在我的上一篇java8基础入门的文章中说了函数式接口的基本概念，这里介绍下JDK提供的一些重要的函数式接口: 重要的函数式接口   接口名称 参数 返回值     Function T, R R   Consumer T void   BiFunction T,U R    Predicate T boolean   Supplier None T    Function 接口: apply方法,">
+<meta name="description" content="在我的上一篇java8基础入门的文章中说了函数式接口的基本概念，这里介绍下JDK提供的一些重要的函数式接口: 重要的函数式接口   接口名称 参数 返回值     Function T, R R   Consumer T void   BiFunction T,U R    Predicate T boolean   Supplier None T    Function 接口:官方文档是这样介绍">
 <meta name="keywords" content="java">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Java8之函数式接口">
 <meta property="og:url" content="http://yoursite.com/2017/12/23/Java8之函数式接口/index.html">
 <meta property="og:site_name" content="Owen&#39;s Blog">
-<meta property="og:description" content="在我的上一篇java8基础入门的文章中说了函数式接口的基本概念，这里介绍下JDK提供的一些重要的函数式接口: 重要的函数式接口   接口名称 参数 返回值     Function T, R R   Consumer T void   BiFunction T,U R    Predicate T boolean   Supplier None T    Function 接口: apply方法,">
+<meta property="og:description" content="在我的上一篇java8基础入门的文章中说了函数式接口的基本概念，这里介绍下JDK提供的一些重要的函数式接口: 重要的函数式接口   接口名称 参数 返回值     Function T, R R   Consumer T void   BiFunction T,U R    Predicate T boolean   Supplier None T    Function 接口:官方文档是这样介绍">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-12-23T03:47:26.000Z">
+<meta property="og:updated_time" content="2017-12-23T04:51:41.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Java8之函数式接口">
-<meta name="twitter:description" content="在我的上一篇java8基础入门的文章中说了函数式接口的基本概念，这里介绍下JDK提供的一些重要的函数式接口: 重要的函数式接口   接口名称 参数 返回值     Function T, R R   Consumer T void   BiFunction T,U R    Predicate T boolean   Supplier None T    Function 接口: apply方法,">
+<meta name="twitter:description" content="在我的上一篇java8基础入门的文章中说了函数式接口的基本概念，这里介绍下JDK提供的一些重要的函数式接口: 重要的函数式接口   接口名称 参数 返回值     Function T, R R   Consumer T void   BiFunction T,U R    Predicate T boolean   Supplier None T    Function 接口:官方文档是这样介绍">
 
 
 
@@ -389,23 +389,16 @@
 </tr>
 </tbody>
 </table>
-<h1 id="Function-接口"><a href="#Function-接口" class="headerlink" title="Function 接口:"></a>Function 接口:</h1><ol>
-<li>apply方法, 抽象的方法: 输入一个参数，得到一个结果。<br>java8之前，我们代码老的方式，是先定义好行为，再调用。<br>现在的方式，行为不需要先定义，通过方法引用的方式，把行为作为参数传递<br>如老的方式可以这样定义一个方法，然后调用： </li>
-</ol>
+<h1 id="Function-接口"><a href="#Function-接口" class="headerlink" title="Function 接口:"></a>Function 接口:</h1><p>官方文档是这样介绍的: 输入一个参数，得到一个结果。<br>初一看不太好理解。下面慢慢说来:<br>1，apply方法, 抽象的方法。<br>java8之前，我们代码老的方式，是先定义好行为，再调用。<br>现在的方式，行为不需要先定义，通过方法引用的方式，把行为作为参数传递<br>如老的方式可以这样定义一个方法，然后调用： </p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">public int method1(int a)&#123;</span><br><span class="line">    return 2*a;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>采用java8新的方式:</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Function&lt;Integer,Integer&gt; function = value-&gt;2*value;</span><br><span class="line">System.out.println(function.apply(100)); //打印返回的结果</span><br></pre></td></tr></table></figure>
-<ol>
-<li>compose方法, 非抽象的default方法.<br>根据源代码，我们可以知道这个方法的作用：<br>当前function实例和另一个function参数进行组合, 先应用参数的apply, 再应用当前的apply</li>
-</ol>
+<p>2，compose方法, 非抽象的default方法.<br>根据源代码，我们可以知道这个方法的作用：<br>当前function实例和另一个function参数进行组合, 先应用参数的apply, 再应用当前的apply</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">default &lt;V&gt; Function&lt;V, R&gt; compose(Function&lt;? super V, ? extends T&gt; before) &#123;</span><br><span class="line">    Objects.requireNonNull(before);</span><br><span class="line">    return (V v) -&gt; apply(before.apply(v));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>看个例子就更清楚了：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Function&lt;Integer,Integer&gt; function1 = value-&gt;2*value;</span><br><span class="line">Function&lt;Integer,Integer&gt; function2 = value-&gt;3+value;</span><br><span class="line">//看下面的组合：先应用参数的apply,也就是function2的操作=5+3=8; 再应用function1的操作=2*8=16</span><br><span class="line">Integer result = function1.compose(function2).apply(5);</span><br><span class="line">System.out.println(result);</span><br></pre></td></tr></table></figure>
 <p>程序输出的最终结果为：16</p>
-<ol>
-<li>andThen方法:<br>也是组合操作，先应用当前的apply, 再应用参数的apply。  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">default &lt;V&gt; Function&lt;T, V&gt; andThen(Function&lt;? super R, ? extends V&gt; after) &#123;</span><br><span class="line">    Objects.requireNonNull(after);</span><br><span class="line">    return (T t) -&gt; after.apply(apply(t));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-</li>
-</ol>
+<p>3，andThen方法:<br>也是组合操作，先应用当前的apply, 再应用参数的apply。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">default &lt;V&gt; Function&lt;T, V&gt; andThen(Function&lt;? super R, ? extends V&gt; after) &#123;</span><br><span class="line">    Objects.requireNonNull(after);</span><br><span class="line">    return (T t) -&gt; after.apply(apply(t));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>看个例子, 注意和上面的compose的结果对比一下。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Function&lt;Integer,Integer&gt; function1 = value-&gt;2*value;</span><br><span class="line">Function&lt;Integer,Integer&gt; function2 = value-&gt;3+value;</span><br><span class="line">//先应用当前对象的的apply,也就是function1的操作=2*5=10; 再应用参数function2的操作=3+10=13</span><br><span class="line">Integer result = function1.andThen(function2).apply(5);</span><br><span class="line">System.out.println(result);</span><br></pre></td></tr></table></figure>
 <p>程序输出的最终结果为：13</p>
@@ -475,6 +468,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/12/23/Java8之Stream/" rel="prev" title="Java8之Stream">
+                Java8之Stream <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -551,7 +548,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">12</span>
+                  <span class="site-state-item-count">13</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
