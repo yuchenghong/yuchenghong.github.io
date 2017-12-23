@@ -1,5 +1,5 @@
 ---
-title: Java函数式编程入门
+title: Java8之函数式编程入门
 date: 2017-12-21 20:30:47
 update: 2017-12-21 20:30:47
 categories: java
