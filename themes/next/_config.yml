@@ -89,6 +89,7 @@ menu:
   tags: /tags/ || tags
   about: /about/ || user
   archives: /archives/ || archive
+  #message: /message
   #schedule: /schedule/ || calendar
   #sitemap: /sitemap.xml || sitemap
   #commonweal: /404/ || heartbeat
