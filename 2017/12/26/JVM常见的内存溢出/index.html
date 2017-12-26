@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="java," />
+  <meta name="keywords" content="jvm,java," />
 
 
 
@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="执行器Executor用来管理Thread对象，简化并发编程Executor的子接口是ExecutorServiceExecutorService的实现类实际上就是线程池   简单的例子:1234567ExecutorService executorService = Executors.newFixedThreadPool(4);executorService.execute(new Runna">
-<meta name="keywords" content="java">
+<meta name="description" content="那些区域会发生内存溢出？除了程序计数器，其他几块运行时数据区都有可能发生内存溢出。   堆溢出报错：java.lang.OutOfMemoryError: Java heap space碰到这个问题，从两个方面入手：1，判断是否是内存泄露。通过内存分析工具对堆快照进行分析。如何分析请看本文的[Dump分析内存]章节，有详细的说明。2，如果不是内存泄露。检查堆参数：-Xmn -Xms -Xmx。">
+<meta name="keywords" content="jvm,java">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Java并发之执行器和线程池">
-<meta property="og:url" content="http://yoursite.com/2017/12/19/Java并发之执行器和线程池/index.html">
+<meta property="og:title" content="JVM常见的内存溢出">
+<meta property="og:url" content="http://yoursite.com/2017/12/26/JVM常见的内存溢出/index.html">
 <meta property="og:site_name" content="Owen&#39;s Blog">
-<meta property="og:description" content="执行器Executor用来管理Thread对象，简化并发编程Executor的子接口是ExecutorServiceExecutorService的实现类实际上就是线程池   简单的例子:1234567ExecutorService executorService = Executors.newFixedThreadPool(4);executorService.execute(new Runna">
+<meta property="og:description" content="那些区域会发生内存溢出？除了程序计数器，其他几块运行时数据区都有可能发生内存溢出。   堆溢出报错：java.lang.OutOfMemoryError: Java heap space碰到这个问题，从两个方面入手：1，判断是否是内存泄露。通过内存分析工具对堆快照进行分析。如何分析请看本文的[Dump分析内存]章节，有详细的说明。2，如果不是内存泄露。检查堆参数：-Xmn -Xms -Xmx。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-12-19T15:31:55.000Z">
+<meta property="og:updated_time" content="2017-12-26T14:20:30.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Java并发之执行器和线程池">
-<meta name="twitter:description" content="执行器Executor用来管理Thread对象，简化并发编程Executor的子接口是ExecutorServiceExecutorService的实现类实际上就是线程池   简单的例子:1234567ExecutorService executorService = Executors.newFixedThreadPool(4);executorService.execute(new Runna">
+<meta name="twitter:title" content="JVM常见的内存溢出">
+<meta name="twitter:description" content="那些区域会发生内存溢出？除了程序计数器，其他几块运行时数据区都有可能发生内存溢出。   堆溢出报错：java.lang.OutOfMemoryError: Java heap space碰到这个问题，从两个方面入手：1，判断是否是内存泄露。通过内存分析工具对堆快照进行分析。如何分析请看本文的[Dump分析内存]章节，有详细的说明。2，如果不是内存泄露。检查堆参数：-Xmn -Xms -Xmx。">
 
 
 
@@ -120,13 +120,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2017/12/19/Java并发之执行器和线程池/"/>
+  <link rel="canonical" href="http://yoursite.com/2017/12/26/JVM常见的内存溢出/"/>
 
 
 
 
 
-  <title>Java并发之执行器和线程池 | Owen's Blog</title>
+  <title>JVM常见的内存溢出 | Owen's Blog</title>
   
 
 
@@ -263,7 +263,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/12/19/Java并发之执行器和线程池/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/12/26/JVM常见的内存溢出/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Owen Yu">
@@ -280,7 +280,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Java并发之执行器和线程池</h1>
+          <h1 class="post-title" itemprop="name headline">JVM常见的内存溢出</h1>
         
 
         <div class="post-meta">
@@ -292,8 +292,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-12-19T23:31:22+08:00">
-                2017-12-19
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-12-26T22:19:54+08:00">
+                2017-12-26
               </time>
             
 
@@ -315,8 +315,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/java/" itemprop="url" rel="index">
-                    <span itemprop="name">java</span>
+                  <a href="/categories/jvm/" itemprop="url" rel="index">
+                    <span itemprop="name">jvm</span>
                   </a>
                 </span>
 
@@ -352,16 +352,19 @@
       
 
       
-        <h1 id="执行器Executor"><a href="#执行器Executor" class="headerlink" title="执行器Executor"></a>执行器Executor</h1><p>用来管理Thread对象，简化并发编程<br>Executor的子接口是ExecutorService<br>ExecutorService的实现类实际上就是<strong>线程池</strong>  </p>
-<p>简单的例子:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">ExecutorService executorService = Executors.newFixedThreadPool(4);</span><br><span class="line">executorService.execute(new Runnable() &#123;</span><br><span class="line">    public void run() &#123;</span><br><span class="line">        System.out.println(Thread.currentThread().getName());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br><span class="line">executorService.shutdown();</span><br></pre></td></tr></table></figure></p>
-<h2 id="ExecutorService实现类"><a href="#ExecutorService实现类" class="headerlink" title="ExecutorService实现类"></a>ExecutorService实现类</h2><p>ThreadPoolExecutor<br>ScheduledThreadPoolExecutor  </p>
-<h2 id="创建ExecutorService"><a href="#创建ExecutorService" class="headerlink" title="创建ExecutorService"></a>创建ExecutorService</h2><p>Executors工厂类来创建：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ExecutorService executorService1 = Executors.newSingleThreadExecutor();</span><br><span class="line">ExecutorService executorService2 = Executors.newFixedThreadPool(10);</span><br><span class="line">ExecutorService executorService3 = Executors.newScheduledThreadPool(10);</span><br></pre></td></tr></table></figure></p>
-<h2 id="使用ExecutorService"><a href="#使用ExecutorService" class="headerlink" title="使用ExecutorService"></a>使用ExecutorService</h2><p>execute(Runnable)：执行Runnable<br>submit(Runnable)：执行Runnable，返回Future，这个Future可以用来检查Runnable是否已经执行完毕。<br>submit(Callable)：执行Callable，返回Future，这里的Future可以获得Callable的返回数据。  </p>
-<h2 id="Future和Callable"><a href="#Future和Callable" class="headerlink" title="Future和Callable"></a>Future和Callable</h2><p>Callable：和Runnable接口很类似。此接口有一个call()方法。在这个方法中，实现任务逻辑并返回一个结果。<br>Future：表示一个任务的生命周期，判断任务是否完成，获取Callable任务的返回结果。  </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">ExecutorService executorService = Executors.newFixedThreadPool(1);</span><br><span class="line">Callable&lt;Integer&gt; task = ()-&gt;&#123;</span><br><span class="line">    try &#123;</span><br><span class="line">        Thread.sleep(1000);</span><br><span class="line">    &#125; catch (InterruptedException e) &#123;</span><br><span class="line">        e.printStackTrace();</span><br><span class="line">    &#125;</span><br><span class="line">    return 5;//返回5</span><br><span class="line">&#125;;</span><br><span class="line">Future&lt;Integer&gt; future = executorService.submit(task);</span><br><span class="line">Integer result = future.get();</span><br><span class="line">System.out.println(result);</span><br></pre></td></tr></table></figure>
-<h2 id="ExecutorService关闭"><a href="#ExecutorService关闭" class="headerlink" title="ExecutorService关闭"></a>ExecutorService关闭</h2><p>shutdown()：并不会立即关闭，但它将不再接受新的任务，而且一旦所有线程都完成了当前任务的时候， ExecutorService 将会关闭。<br>shutdownNow()：立即停止所有执行中的任务，并忽略掉那些已提交但尚未开始处理的任务。无法保证正在执行的任务的正确性。  </p>
-<h1 id="线程池"><a href="#线程池" class="headerlink" title="线程池"></a>线程池</h1><p>ThreadPoolExecutor是ExecutorService接口的一个实现。<br>一般我们可以用Executors工厂类来创建线程池，其用法和上面的讲的例子一样。<br>同时我们也可以使用ThreadPoolExecutor的构造方法</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">ExecutorService threadPoolExecutor =</span><br><span class="line">    new ThreadPoolExecutor(</span><br><span class="line">        corePoolSize,</span><br><span class="line">        maxPoolSize,</span><br><span class="line">        keepAliveTime,</span><br><span class="line">        TimeUnit.MILLISECONDS,</span><br><span class="line">        new LinkedBlockingQueue&lt;Runnable&gt;()</span><br><span class="line">    );</span><br></pre></td></tr></table></figure>
+        <p>那些区域会发生内存溢出？<br>除了程序计数器，其他几块运行时数据区都有可能发生内存溢出。  </p>
+<h1 id="堆溢出"><a href="#堆溢出" class="headerlink" title="堆溢出"></a>堆溢出</h1><p>报错：java.lang.OutOfMemoryError: Java heap space<br>碰到这个问题，从两个方面入手：<br>1，判断是否是内存泄露。<br>通过内存分析工具对堆快照进行分析。如何分析请看本文的[Dump分析内存]章节，有详细的说明。<br>2，如果不是内存泄露。<br>检查堆参数：-Xmn -Xms -Xmx。  </p>
+<h1 id="栈溢出"><a href="#栈溢出" class="headerlink" title="栈溢出"></a>栈溢出</h1><p>报错：java.lang.StackOverflowError : Thread Stack space<br>或者类似java.lang.OutOfMemoryError: unable to create new native thread<br>1，如果调用构造函数的 “层”太多了，以致于把栈区溢出了。会抛出StackOverflowError异常。<br>2，如果虚拟机在扩展时，无法申请到足够的内存，则抛出OutOfMemoryError异常。  </p>
+<p>解决办法：<br>1，检查程序，函数层次 还有 创建的线程数量。<br>2，通过-Xss: 来设置每个线程的Stack大小。</p>
+<h1 id="方法区溢出-java8以前"><a href="#方法区溢出-java8以前" class="headerlink" title="方法区溢出-java8以前"></a>方法区溢出-java8以前</h1><p>报错：java.lang.OutOfMemoryError: PermGen space<br>这块内存主要是被JVM存放Class，GC不会在主程序运行期对PermGen space进行清理，所以如果你的系统会载入很多CLASS的话，就很可能出现PermGen space溢出。一般发生在程序的启动阶段。  </p>
+<p>解决方法：<br>通过-XX:PermSize和-XX:MaxPermSize设置永久代大小即可。</p>
+<h1 id="元空间溢出-Java8以后"><a href="#元空间溢出-Java8以后" class="headerlink" title="元空间溢出-Java8以后"></a>元空间溢出-Java8以后</h1><p>报错：java.lang.OutOfMemoryError: Metaspace<br>默认元空间只受本地物理内存的限制。<br>如果这块有溢出，从两个方面检查：<br>1，检查-XX:MaxMetaspaceSize参数，是否限制了元空间大小，如果是。则考虑调大或者直接取消限制。<br>2，如果是物理内存溢出，则考虑加大物理内存。  </p>
+<h1 id="本机直接内存溢出"><a href="#本机直接内存溢出" class="headerlink" title="本机直接内存溢出"></a>本机直接内存溢出</h1><p>报错：java.lang.OutOfMemoryError<br>检查dump文件，如果没有明显异常，就要怀疑是不是直接内存溢出了。<br>一般的原因是由于NIO直接分配内存导致的。  </p>
+<p>解决办法：<br>检查代码。</p>
+<h1 id="Dump分析内存"><a href="#Dump分析内存" class="headerlink" title="Dump分析内存"></a>Dump分析内存</h1><p>采用jmap命令导出内存转储快照Dump文件。<br>比如tomcat, 首先查询到你对应的Tomcat的pid：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ps -aux|grep xxx-tomcat</span><br></pre></td></tr></table></figure>
+<p>比如得到的pid: 9809, 然后执行命令，其中dump001.hprof为导出的文件名：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jmap -dump:format=b,file=dump001.hprof 9809</span><br></pre></td></tr></table></figure></p>
+<p>导出完毕。下载先来，有eclipse打开，打开前需要安装一下插件(baidu找下插件)。<br>打开文件后，可以看到那些对象占的内存比较多。来排查代码问题。  </p>
 
       
     </div>
@@ -379,6 +382,8 @@
       
         <div class="post-tags">
           
+            <a href="/tags/jvm/" rel="tag"># jvm</a>
+          
             <a href="/tags/java/" rel="tag"># java</a>
           
         </div>
@@ -392,8 +397,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/12/19/Java并发之同步工具/" rel="next" title="Java并发之同步工具">
-                <i class="fa fa-chevron-left"></i> Java并发之同步工具
+              <a href="/2017/12/26/JVM运行时数据区/" rel="next" title="JVM运行时数据区">
+                <i class="fa fa-chevron-left"></i> JVM运行时数据区
               </a>
             
           </div>
@@ -401,10 +406,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/12/20/Java并发之对象共享/" rel="prev" title="Java并发之对象共享">
-                Java并发之对象共享 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -538,7 +539,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#执行器Executor"><span class="nav-text"><a href="#&#x6267;&#x884C;&#x5668;Executor" class="headerlink" title="&#x6267;&#x884C;&#x5668;Executor"></a>&#x6267;&#x884C;&#x5668;Executor</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#ExecutorService实现类"><span class="nav-text"><a href="#ExecutorService&#x5B9E;&#x73B0;&#x7C7B;" class="headerlink" title="ExecutorService&#x5B9E;&#x73B0;&#x7C7B;"></a>ExecutorService&#x5B9E;&#x73B0;&#x7C7B;</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#创建ExecutorService"><span class="nav-text"><a href="#&#x521B;&#x5EFA;ExecutorService" class="headerlink" title="&#x521B;&#x5EFA;ExecutorService"></a>&#x521B;&#x5EFA;ExecutorService</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用ExecutorService"><span class="nav-text"><a href="#&#x4F7F;&#x7528;ExecutorService" class="headerlink" title="&#x4F7F;&#x7528;ExecutorService"></a>&#x4F7F;&#x7528;ExecutorService</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Future和Callable"><span class="nav-text"><a href="#Future&#x548C;Callable" class="headerlink" title="Future&#x548C;Callable"></a>Future&#x548C;Callable</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ExecutorService关闭"><span class="nav-text"><a href="#ExecutorService&#x5173;&#x95ED;" class="headerlink" title="ExecutorService&#x5173;&#x95ED;"></a>ExecutorService&#x5173;&#x95ED;</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#线程池"><span class="nav-text"><a href="#&#x7EBF;&#x7A0B;&#x6C60;" class="headerlink" title="&#x7EBF;&#x7A0B;&#x6C60;"></a>&#x7EBF;&#x7A0B;&#x6C60;</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#堆溢出"><span class="nav-text"><a href="#&#x5806;&#x6EA2;&#x51FA;" class="headerlink" title="&#x5806;&#x6EA2;&#x51FA;"></a>&#x5806;&#x6EA2;&#x51FA;</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#栈溢出"><span class="nav-text"><a href="#&#x6808;&#x6EA2;&#x51FA;" class="headerlink" title="&#x6808;&#x6EA2;&#x51FA;"></a>&#x6808;&#x6EA2;&#x51FA;</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#方法区溢出-java8以前"><span class="nav-text"><a href="#&#x65B9;&#x6CD5;&#x533A;&#x6EA2;&#x51FA;-java8&#x4EE5;&#x524D;" class="headerlink" title="&#x65B9;&#x6CD5;&#x533A;&#x6EA2;&#x51FA;-java8&#x4EE5;&#x524D;"></a>&#x65B9;&#x6CD5;&#x533A;&#x6EA2;&#x51FA;-java8&#x4EE5;&#x524D;</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#元空间溢出-Java8以后"><span class="nav-text"><a href="#&#x5143;&#x7A7A;&#x95F4;&#x6EA2;&#x51FA;-Java8&#x4EE5;&#x540E;" class="headerlink" title="&#x5143;&#x7A7A;&#x95F4;&#x6EA2;&#x51FA;-Java8&#x4EE5;&#x540E;"></a>&#x5143;&#x7A7A;&#x95F4;&#x6EA2;&#x51FA;-Java8&#x4EE5;&#x540E;</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#本机直接内存溢出"><span class="nav-text"><a href="#&#x672C;&#x673A;&#x76F4;&#x63A5;&#x5185;&#x5B58;&#x6EA2;&#x51FA;" class="headerlink" title="&#x672C;&#x673A;&#x76F4;&#x63A5;&#x5185;&#x5B58;&#x6EA2;&#x51FA;"></a>&#x672C;&#x673A;&#x76F4;&#x63A5;&#x5185;&#x5B58;&#x6EA2;&#x51FA;</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Dump分析内存"><span class="nav-text"><a href="#Dump&#x5206;&#x6790;&#x5185;&#x5B58;" class="headerlink" title="Dump&#x5206;&#x6790;&#x5185;&#x5B58;"></a>Dump&#x5206;&#x6790;&#x5185;&#x5B58;</span></a></li></ol></div>
             
 
           </div>
