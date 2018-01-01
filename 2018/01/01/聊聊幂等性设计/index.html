@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="互联网技术," />
 
 
 
@@ -79,13 +79,18 @@
 
 
 
-<meta property="og:type" content="website">
-<meta property="og:title" content="Owen&#39;s Blog">
-<meta property="og:url" content="http://yoursite.com/categories/github/index.html">
+<meta name="description" content="前一阵时间，碰到了幂等性的问题，这里作一下总结。所谓幂等性就是对于一个接口，如果参数一样，则不管调用多少次，对系统内部产生的影响是一致的。最常见的就是在支付扣款时，不管是调用分布式服务还是第三方接口，由于网络的不稳定和不确定性，扣款消息可能会调用到多次，这多次消息只能生效一次，否则会产生很严重的后果。   我们碰到的业务场景：公司新接银行存管，调用银行存管接口的逻辑如下：1，用户发起操作；2，服务">
+<meta name="keywords" content="互联网技术">
+<meta property="og:type" content="article">
+<meta property="og:title" content="聊聊幂等性设计">
+<meta property="og:url" content="http://yoursite.com/2018/01/01/聊聊幂等性设计/index.html">
 <meta property="og:site_name" content="Owen&#39;s Blog">
+<meta property="og:description" content="前一阵时间，碰到了幂等性的问题，这里作一下总结。所谓幂等性就是对于一个接口，如果参数一样，则不管调用多少次，对系统内部产生的影响是一致的。最常见的就是在支付扣款时，不管是调用分布式服务还是第三方接口，由于网络的不稳定和不确定性，扣款消息可能会调用到多次，这多次消息只能生效一次，否则会产生很严重的后果。   我们碰到的业务场景：公司新接银行存管，调用银行存管接口的逻辑如下：1，用户发起操作；2，服务">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-01-01T10:58:28.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Owen&#39;s Blog">
+<meta name="twitter:title" content="聊聊幂等性设计">
+<meta name="twitter:description" content="前一阵时间，碰到了幂等性的问题，这里作一下总结。所谓幂等性就是对于一个接口，如果参数一样，则不管调用多少次，对系统内部产生的影响是一致的。最常见的就是在支付扣款时，不管是调用分布式服务还是第三方接口，由于网络的不稳定和不确定性，扣款消息可能会调用到多次，这多次消息只能生效一次，否则会产生很严重的后果。   我们碰到的业务场景：公司新接银行存管，调用银行存管接口的逻辑如下：1，用户发起操作；2，服务">
 
 
 
@@ -115,13 +120,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/categories/github/"/>
+  <link rel="canonical" href="http://yoursite.com/2018/01/01/聊聊幂等性设计/"/>
 
 
 
 
 
-  <title>分类: github | Owen's Blog</title>
+  <title>聊聊幂等性设计 | Owen's Blog</title>
   
 
 
@@ -140,7 +145,7 @@
     
   
 
-  <div class="container sidebar-position-left ">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -244,83 +249,176 @@
           <div id="content" class="content">
             
 
-  
-  
-  
-  <div class="post-block category">
+  <div id="posts" class="posts-expand">
+    
 
-    <div id="posts" class="posts-collapse">
-      <div class="collection-title">
-        <h1>github<small>分类</small>
-        </h1>
-      </div>
+  
 
-      
-        
+  
+  
+  
 
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/01/聊聊幂等性设计/">
 
-      <h2 class="post-title">
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Owen Yu">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Owen's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
         
-            <a class="post-title-link" href="/2017/12/21/修改github作者信息/" itemprop="url">
-              
-                <span itemprop="name">修改github作者信息</span>
-              
-            </a>
         
-      </h2>
+          <h1 class="post-title" itemprop="name headline">聊聊幂等性设计</h1>
+        
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2017-12-21T21:03:35+08:00"
-              content="2017-12-21" >
-          12-21
-        </time>
-      </div>
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-01T18:54:44+08:00">
+                2018-01-01
+              </time>
+            
 
-    </header>
-  </article>
+            
 
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/互联网技术/" itemprop="url" rel="index">
+                    <span itemprop="name">互联网技术</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
-        
+      
 
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2017/12/17/Github上博客搭建/" itemprop="url">
-              
-                <span itemprop="name">Github上博客搭建</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2017-12-17T09:15:35+08:00"
-              content="2017-12-17" >
-          12-17
-        </time>
-      </div>
-
-    </header>
-  </article>
-
+      
+        <p>前一阵时间，碰到了幂等性的问题，这里作一下总结。<br>所谓幂等性就是对于一个接口，如果参数一样，则不管调用多少次，对系统内部产生的影响是一致的。<br>最常见的就是在支付扣款时，不管是调用分布式服务还是第三方接口，由于网络的不稳定和不确定性，扣款消息可能会调用到多次，这多次消息只能生效一次，否则会产生很严重的后果。  </p>
+<p>我们碰到的业务场景：<br>公司新接银行存管，调用银行存管接口的逻辑如下：<br>1，用户发起操作；<br>2，服务器验证后，调用银行存管接口进行交易；<br>3，不管交易成功还是失败，银行存管接口会实时返回消息；<br>4，服务器根据银行存管实时返回的消息，处理用户的订单。  </p>
+<p>如果没有其它因素，上面的流程很完美，用户的交易或者成功或者失败。<br>但是，由于网络本身就是不可靠的，极有可能会丢失消息。  </p>
+<p>上面的交易流程，有可能产生问题的地方：<br>一个是我们的消息，存管接口没有收到；<br>二是存管接口收到了我们的消息，但返回给我们的消息，我们没有收到。   </p>
+<p>对于第一个问题，存管没有收到消息，也就不会返回消息给我们，这种情况倒也不会产生数据的问题，用超时的机制就可以解决了。<br>对于第二个问题，银行存管那边的方案是这样的：在同步返回交易结果的同时，也通过异步调用的方式消息返回给我们交易结果。异步返回时，需要我们回复”SUCESSFULL”信息，这样存管那边确认我们已经收到消息并已正确处理，否则存管会最多三次尝试异步回调。<br>所以，可能网络原因，最差的情况，我们会收到1次同步消息，和3次异步消息。<br>如果我们对这个消息没有做幂等处理的话，这个交易将会被处理4次，产生严重的数据问题。  </p>
+<p>类似的场景很多，凡是有网络重发的地方，都需要考虑幂等性。  </p>
+<p>可以从几个方面来看：<br>1，所有的操作和交易，都必须有订单号，同一笔操作，必须保证其订单ID唯一；<br>2，插入数据库时，订单ID做唯一性约束；有人说我的数据库分库分表了，唯一性约束不能保证啊。这就和你分库分表的规则有关了，即使分库分表，同样的操作也应该是写进同一表才对啊，否则分库分表的规则会很混乱。<br>3，如果交易是需要调第三方接口的，一般第三方接口都会有唯一交易的ID，对应上我们的交易ID就可以；<br>4，失败重试机制，必须保证同一个操作，其订单号相同。  </p>
+<p>有资料说分布式锁，锁不一定能保证幂等性，这个坑是曾经有人跳过的。  </p>
 
       
     </div>
+    
+    
+    
 
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/互联网技术/" rel="tag"># 互联网技术</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/12/30/JVM垃圾收集器/" rel="next" title="JVM垃圾收集器">
+                <i class="fa fa-chevron-left"></i> JVM垃圾收集器
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
   </div>
   
   
   
+  </article>
 
-  
 
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -328,6 +426,10 @@
 
 
           
+
+  
+
+
 
         </div>
         
@@ -544,6 +646,10 @@
   
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.3"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.3"></script>
+
+
 
   
 
