@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="java," />
+  <meta name="keywords" content="互联网技术," />
 
 
 
@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="简单聊一下死锁。当一个线程永远的持有一个锁，并且其他线程都尝试获得这个锁，就会发生死锁。如果发生死锁，通常JVM没有办法自动恢复，只能重启。对线上系统来说，这是灾难性的。 死锁的发生场景、例子1，最简单的例子:线程A持有锁1并尝试获得锁2，线程B占有锁2并尝试获得锁1。两个线程将会永远的等待下去。   2，多个线程，持有锁的同时，尝试获得对方的锁，形成一个复杂的环状依赖。这些线程都将无限的等待。">
-<meta name="keywords" content="java">
+<meta name="description" content="现在互联网应用，单台服务器处理的请求是有限的，为了满足业务增长和大量的用户量的增长。需要引用多台服务器。然后通过负载均衡机制将用户的请求分发到应用上的任意一台服务器。   现在用的比较多的反向代理和负载均衡软件就是nginx,本文就是介绍nginx的反向代理和负载均衡基本用法。   一、反向代理nginx一个重要的功能就是反向代理，下面的负载均衡都是基于反向代理。客户端请求nginx，nginx请">
+<meta name="keywords" content="互联网技术">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Java并发之死锁">
-<meta property="og:url" content="http://yoursite.com/2017/12/18/Java并发之死锁/index.html">
+<meta property="og:title" content="负载均衡和反向代理">
+<meta property="og:url" content="http://yoursite.com/2018/01/03/负载均衡和反向代理/index.html">
 <meta property="og:site_name" content="Owen&#39;s Blog">
-<meta property="og:description" content="简单聊一下死锁。当一个线程永远的持有一个锁，并且其他线程都尝试获得这个锁，就会发生死锁。如果发生死锁，通常JVM没有办法自动恢复，只能重启。对线上系统来说，这是灾难性的。 死锁的发生场景、例子1，最简单的例子:线程A持有锁1并尝试获得锁2，线程B占有锁2并尝试获得锁1。两个线程将会永远的等待下去。   2，多个线程，持有锁的同时，尝试获得对方的锁，形成一个复杂的环状依赖。这些线程都将无限的等待。">
+<meta property="og:description" content="现在互联网应用，单台服务器处理的请求是有限的，为了满足业务增长和大量的用户量的增长。需要引用多台服务器。然后通过负载均衡机制将用户的请求分发到应用上的任意一台服务器。   现在用的比较多的反向代理和负载均衡软件就是nginx,本文就是介绍nginx的反向代理和负载均衡基本用法。   一、反向代理nginx一个重要的功能就是反向代理，下面的负载均衡都是基于反向代理。客户端请求nginx，nginx请">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-12-18T14:50:46.000Z">
+<meta property="og:updated_time" content="2018-01-03T13:42:14.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Java并发之死锁">
-<meta name="twitter:description" content="简单聊一下死锁。当一个线程永远的持有一个锁，并且其他线程都尝试获得这个锁，就会发生死锁。如果发生死锁，通常JVM没有办法自动恢复，只能重启。对线上系统来说，这是灾难性的。 死锁的发生场景、例子1，最简单的例子:线程A持有锁1并尝试获得锁2，线程B占有锁2并尝试获得锁1。两个线程将会永远的等待下去。   2，多个线程，持有锁的同时，尝试获得对方的锁，形成一个复杂的环状依赖。这些线程都将无限的等待。">
+<meta name="twitter:title" content="负载均衡和反向代理">
+<meta name="twitter:description" content="现在互联网应用，单台服务器处理的请求是有限的，为了满足业务增长和大量的用户量的增长。需要引用多台服务器。然后通过负载均衡机制将用户的请求分发到应用上的任意一台服务器。   现在用的比较多的反向代理和负载均衡软件就是nginx,本文就是介绍nginx的反向代理和负载均衡基本用法。   一、反向代理nginx一个重要的功能就是反向代理，下面的负载均衡都是基于反向代理。客户端请求nginx，nginx请">
 
 
 
@@ -120,13 +120,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2017/12/18/Java并发之死锁/"/>
+  <link rel="canonical" href="http://yoursite.com/2018/01/03/负载均衡和反向代理/"/>
 
 
 
 
 
-  <title>Java并发之死锁 | Owen's Blog</title>
+  <title>负载均衡和反向代理 | Owen's Blog</title>
   
 
 
@@ -263,7 +263,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/12/18/Java并发之死锁/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/03/负载均衡和反向代理/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Owen Yu">
@@ -280,7 +280,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Java并发之死锁</h1>
+          <h1 class="post-title" itemprop="name headline">负载均衡和反向代理</h1>
         
 
         <div class="post-meta">
@@ -292,8 +292,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-12-18T22:48:58+08:00">
-                2017-12-18
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-03T21:38:43+08:00">
+                2018-01-03
               </time>
             
 
@@ -315,8 +315,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/java/" itemprop="url" rel="index">
-                    <span itemprop="name">java</span>
+                  <a href="/categories/互联网技术/" itemprop="url" rel="index">
+                    <span itemprop="name">互联网技术</span>
                   </a>
                 </span>
 
@@ -352,22 +352,20 @@
       
 
       
-        <p>简单聊一下死锁。<br>当一个线程永远的持有一个锁，并且其他线程都尝试获得这个锁，就会发生死锁。<br>如果发生死锁，通常JVM没有办法自动恢复，只能重启。对线上系统来说，这是灾难性的。</p>
-<h1 id="死锁的发生场景、例子"><a href="#死锁的发生场景、例子" class="headerlink" title="死锁的发生场景、例子"></a>死锁的发生场景、例子</h1><p>1，最简单的例子:<br>线程A持有锁1并尝试获得锁2，线程B占有锁2并尝试获得锁1。两个线程将会永远的等待下去。  </p>
-<p>2，多个线程，持有锁的同时，尝试获得对方的锁，形成一个复杂的环状依赖。这些线程都将无限的等待。  </p>
-<p>3，两个线程以不同的顺序获得相同的锁<br>举个栗子：<br>一段转账的代码，从A账号转钱到B账号，为了保持数据一致性，操作前需要对着两个账号加锁，避免账号被同步更改而产生错误的数据。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">public void transfer(Account fromAccount,Account toAccount)&#123;</span><br><span class="line">    synchronized(fromAccount)&#123;</span><br><span class="line">        synchronized(toAccount)&#123;</span><br><span class="line">            //转账动作. </span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>上面这段代码，是什么情况下会死锁呢？<br>这样一个场景：<br>A线程：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">transfer(account1,account2)</span><br></pre></td></tr></table></figure></p>
-<p>B线程：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">transfer(account2,account1)</span><br></pre></td></tr></table></figure></p>
-<p>A获得account1的锁，等待account2的锁； B获得account2的锁，等待account1的锁。 两个线程无限的等待。<br>这就是“两个线程以不同的顺序获得相同的锁”。  </p>
-<h1 id="死锁产生的条件"><a href="#死锁产生的条件" class="headerlink" title="死锁产生的条件"></a>死锁产生的条件</h1><p>死锁的发生必须满足4个条件：<br>1，资源是不能共享的，同一资源不能被不同的线程占有<br>2，任务持有一个资源的同时，等待别的任务的资源<br>3，资源不能抢占，不能强行从其他线程抢占<br>4，产生循环等待  </p>
-<p>要发生死锁，上面的条件缺一不可。 </p>
-<h1 id="如何避免死锁"><a href="#如何避免死锁" class="headerlink" title="如何避免死锁"></a>如何避免死锁</h1><p>上面说到了死锁的发生必须要满足四个条件。<br>所以避免死锁，我们可以从这四点着手，打破其中一条即可。  </p>
-<p>在多线程下，可以从几个方面：<br>1，加锁顺序：对于同样的资源，其加锁顺序一样。<br>比如上面的转账例子，</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">transfer(account1,account2)</span><br><span class="line">transfer(account2,account1)</span><br></pre></td></tr></table></figure>
-<p>这两个调用，不管参数的顺序如何，在加锁时，保证account1,account2是同样的顺序，就一定不会有死锁。<br>具体实现，可以设计一个哈希算法，来保证加锁的顺序。代码如下，这样对于同样的账号，不管是在哪个参数传进来，其hash值大小固定，加锁顺序就一定是一样的。 <strong>问题完美解决。</strong>  </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">public void transfer(Account fromAccount,Account toAccount)&#123;</span><br><span class="line">    int fromHash = hash(fromAccount);</span><br><span class="line">    int toHash = hash(toAccount);</span><br><span class="line">    </span><br><span class="line">    if(fromHash&gt;toHash)&#123;</span><br><span class="line">        synchronized(fromAccount)&#123;</span><br><span class="line">            synchronized(toAccount)&#123;</span><br><span class="line">                //转账动作. </span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;else&#123;</span><br><span class="line">        synchronized(toAccount)&#123;</span><br><span class="line">            synchronized(fromAccount)&#123;</span><br><span class="line">                //转账动作. </span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>2，加锁时间<br>使用Lock对象来加锁， 在尝试获取锁的时候，加上时间参数，超过时间就放弃操作，避免永久等待。  </p>
+        <p>现在互联网应用，单台服务器处理的请求是有限的，为了满足业务增长和大量的用户量的增长。需要引用多台服务器。<br>然后通过负载均衡机制将用户的请求分发到应用上的任意一台服务器。  </p>
+<p>现在用的比较多的反向代理和负载均衡软件就是nginx,本文就是介绍nginx的反向代理和负载均衡基本用法。  </p>
+<h1 id="一、反向代理"><a href="#一、反向代理" class="headerlink" title="一、反向代理"></a>一、反向代理</h1><p>nginx一个重要的功能就是反向代理，下面的负载均衡都是基于反向代理。<br>客户端请求nginx，nginx请求应用服务器，然后将结果返回给客户端，此时Nginx就是反向代理服务器。<br>nginx反向代理的指令不需要新增额外的模块，默认自带proxy_pass指令，只需要修改配置文件就可以实现反向代理。<br>修改安装目录下conf子目录的nginx.conf文件：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">	listen 80;</span><br><span class="line">	location / &#123;</span><br><span class="line">		proxy_pass http://192.168.1.5:8080; #应用服务器HTTP地址</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="二、负载均衡"><a href="#二、负载均衡" class="headerlink" title="二、负载均衡"></a>二、负载均衡</h1><p>常见的负载均衡方案：<br>1，首先在DNS，通过“DNS轮询”：对于一个域名配置了多个解析ip，每次DNS解析请求来访问DNS Server，会轮询返回这些ip，保证每个ip的解析概率是相同的。<br>2，DNS解析的每个IP都对应到Nginx的外网IP，DNS解析后，请求就到了nginx。对于开发人员来说，可以只关心nginx就可以了。  </p>
+<p>首先看看常见的负载均衡算法：<br>1，轮询：<br>将请求按顺序轮流地分配到后端服务器，在Nginx可以用weight参数来实现基于权重的轮询；  </p>
+<p>2，随机：<br>根据后端服务器列表随机选取其中的一台进行访问。  </p>
+<p>3，Hash算法：<br>根据用户访问的URL，通过Hash函数计算得到一个数值，该数值对服务器列表的大小取模运算，得到的结果就是要访问的服务器。  </p>
+<p>4，一致性Hash:<br>Hash算法最大的问题是当增加或者减少服务器时，会导致很多URL被重新均衡到不同的服务器。<br>可以用一致性Hash算法解决这个问题，有关一致性hash算法，这里不详细讲了，可以百度找一下。  </p>
+<p>下面看下在nginx如何配置负载均衡：<br>负载均衡要用到nginx HTTP Upstream模块，默认安装就会带上这个模块。<br>修改安装目录下conf子目录的nginx.conf文件：  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">upstream webtest&#123;  #集群的名字</span><br><span class="line">    #ip_hash;  #负载均衡算法，默认是轮询</span><br><span class="line">    server 127.0.0.1:8080 weight=1;</span><br><span class="line">    server 127.0.0.1:8081 weight=1;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">server &#123;</span><br><span class="line">    listen       80;  #监听80端口</span><br><span class="line">    server_name  localhost;  #服务器域名</span><br><span class="line"></span><br><span class="line">    location / &#123;</span><br><span class="line">        proxy_pass http://webtest;   #要与上面集群的名字一样</span><br><span class="line">        proxy_redirect default;</span><br><span class="line">    &#125; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>负载算法：<br>1，round-robin, 轮询,默认的算法；<br>2，ip_hash,  相同的IP到同一台服务器；<br>3，url_hash, 按访问url的hash结果来分配请求，使每个url定向到同一个后端服务器;<br>4，fair, 可以依据页面大小和加载时间长短智能地进行负载均衡，也就是根据后端服务器的响应时间来分配请求，响应时间短的优先分配。Nginx本身是不支持fair的，如果需要使用这种调度算法，必须下载Nginx的upstream_fair模块。  </p>
+<p>weight参数：<br>权重，默认是1，权重越高，表示分配到该服务器请求就越多；  </p>
+<p>upstream 支持的状态参数：<br>在HTTP Upstream模块中，可以通过server指令指定后端服务器的IP地址和端口，同时还可以设定每个后端服务器在负载均衡调度中的状态。常用的状态有：<br>1，down，表示当前的server暂时不参与负载均衡。<br>2，backup，预留的备份机器。当其他所有的非backup机器出现故障或者忙的时候，才会请求backup机器，因此这台机器的压力最轻。<br>3，max_fails，允许请求失败的次数，默认为1。当超过最大次数时，返回proxy_next_upstream 模块定义的错误。<br>4，fail_timeout，在经历了max_fails次失败后，暂停服务的时间。max_fails可以和fail_timeout一起使用。<br>当负载调度算法为ip_hash时，后端服务器在负载均衡调度中的状态不能是weight和backup。  </p>
 
       
     </div>
@@ -385,7 +383,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/java/" rel="tag"># java</a>
+            <a href="/tags/互联网技术/" rel="tag"># 互联网技术</a>
           
         </div>
       
@@ -398,8 +396,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/12/17/Java并发之线程同步/" rel="next" title="Java并发之线程同步">
-                <i class="fa fa-chevron-left"></i> Java并发之线程同步
+              <a href="/2018/01/01/聊聊幂等性设计/" rel="next" title="聊聊幂等性设计">
+                <i class="fa fa-chevron-left"></i> 聊聊幂等性设计
               </a>
             
           </div>
@@ -407,10 +405,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/12/19/Java并发之同步工具/" rel="prev" title="Java并发之同步工具">
-                Java并发之同步工具 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -544,7 +538,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#死锁的发生场景、例子"><span class="nav-text"><a href="#&#x6B7B;&#x9501;&#x7684;&#x53D1;&#x751F;&#x573A;&#x666F;&#x3001;&#x4F8B;&#x5B50;" class="headerlink" title="&#x6B7B;&#x9501;&#x7684;&#x53D1;&#x751F;&#x573A;&#x666F;&#x3001;&#x4F8B;&#x5B50;"></a>&#x6B7B;&#x9501;&#x7684;&#x53D1;&#x751F;&#x573A;&#x666F;&#x3001;&#x4F8B;&#x5B50;</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#死锁产生的条件"><span class="nav-text"><a href="#&#x6B7B;&#x9501;&#x4EA7;&#x751F;&#x7684;&#x6761;&#x4EF6;" class="headerlink" title="&#x6B7B;&#x9501;&#x4EA7;&#x751F;&#x7684;&#x6761;&#x4EF6;"></a>&#x6B7B;&#x9501;&#x4EA7;&#x751F;&#x7684;&#x6761;&#x4EF6;</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#如何避免死锁"><span class="nav-text"><a href="#&#x5982;&#x4F55;&#x907F;&#x514D;&#x6B7B;&#x9501;" class="headerlink" title="&#x5982;&#x4F55;&#x907F;&#x514D;&#x6B7B;&#x9501;"></a>&#x5982;&#x4F55;&#x907F;&#x514D;&#x6B7B;&#x9501;</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#一、反向代理"><span class="nav-text"><a href="#&#x4E00;&#x3001;&#x53CD;&#x5411;&#x4EE3;&#x7406;" class="headerlink" title="&#x4E00;&#x3001;&#x53CD;&#x5411;&#x4EE3;&#x7406;"></a>&#x4E00;&#x3001;&#x53CD;&#x5411;&#x4EE3;&#x7406;</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#二、负载均衡"><span class="nav-text"><a href="#&#x4E8C;&#x3001;&#x8D1F;&#x8F7D;&#x5747;&#x8861;" class="headerlink" title="&#x4E8C;&#x3001;&#x8D1F;&#x8F7D;&#x5747;&#x8861;"></a>&#x4E8C;&#x3001;&#x8D1F;&#x8F7D;&#x5747;&#x8861;</span></a></li></ol></div>
             
 
           </div>
