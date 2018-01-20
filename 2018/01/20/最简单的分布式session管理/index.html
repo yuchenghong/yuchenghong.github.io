@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="java," />
+  <meta name="keywords" content="互联网技术," />
 
 
 
@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="简单聊一下死锁。当一个线程永远的持有一个锁，并且其他线程都尝试获得这个锁，就会发生死锁。如果发生死锁，通常JVM没有办法自动恢复，只能重启。对线上系统来说，这是灾难性的。 死锁的发生场景、例子1，最简单的例子:线程A持有锁1并尝试获得锁2，线程B占有锁2并尝试获得锁1。两个线程将会永远的等待下去。   2，多个线程，持有锁的同时，尝试获得对方的锁，形成一个复杂的环状依赖。这些线程都将无限的等待。">
-<meta name="keywords" content="java">
+<meta name="description" content="前几天和朋友讨论前后端分离和分布式session问题。可以用一种最简单的办法来实现: 把用户验证信息保存在redis，设置过期时间。当用户有任何操作时，刷新redis过期时间。 超时时间内用户没有任何操作，则验证信息失效，需要重新登录。这样可以做到模拟单机环境session的功能。       可以用到下面的场景：1，对于分布式网站，其应用服务器(如tomcat)不止一台，请求在不同的服务器跳转，">
+<meta name="keywords" content="互联网技术">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Java并发之死锁">
-<meta property="og:url" content="http://yoursite.com/2017/12/18/Java并发之死锁/index.html">
+<meta property="og:title" content="最简单的分布式session管理">
+<meta property="og:url" content="http://yoursite.com/2018/01/20/最简单的分布式session管理/index.html">
 <meta property="og:site_name" content="Owen&#39;s Blog">
-<meta property="og:description" content="简单聊一下死锁。当一个线程永远的持有一个锁，并且其他线程都尝试获得这个锁，就会发生死锁。如果发生死锁，通常JVM没有办法自动恢复，只能重启。对线上系统来说，这是灾难性的。 死锁的发生场景、例子1，最简单的例子:线程A持有锁1并尝试获得锁2，线程B占有锁2并尝试获得锁1。两个线程将会永远的等待下去。   2，多个线程，持有锁的同时，尝试获得对方的锁，形成一个复杂的环状依赖。这些线程都将无限的等待。">
+<meta property="og:description" content="前几天和朋友讨论前后端分离和分布式session问题。可以用一种最简单的办法来实现: 把用户验证信息保存在redis，设置过期时间。当用户有任何操作时，刷新redis过期时间。 超时时间内用户没有任何操作，则验证信息失效，需要重新登录。这样可以做到模拟单机环境session的功能。       可以用到下面的场景：1，对于分布式网站，其应用服务器(如tomcat)不止一台，请求在不同的服务器跳转，">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-12-18T14:50:46.000Z">
+<meta property="og:updated_time" content="2018-01-20T11:09:42.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Java并发之死锁">
-<meta name="twitter:description" content="简单聊一下死锁。当一个线程永远的持有一个锁，并且其他线程都尝试获得这个锁，就会发生死锁。如果发生死锁，通常JVM没有办法自动恢复，只能重启。对线上系统来说，这是灾难性的。 死锁的发生场景、例子1，最简单的例子:线程A持有锁1并尝试获得锁2，线程B占有锁2并尝试获得锁1。两个线程将会永远的等待下去。   2，多个线程，持有锁的同时，尝试获得对方的锁，形成一个复杂的环状依赖。这些线程都将无限的等待。">
+<meta name="twitter:title" content="最简单的分布式session管理">
+<meta name="twitter:description" content="前几天和朋友讨论前后端分离和分布式session问题。可以用一种最简单的办法来实现: 把用户验证信息保存在redis，设置过期时间。当用户有任何操作时，刷新redis过期时间。 超时时间内用户没有任何操作，则验证信息失效，需要重新登录。这样可以做到模拟单机环境session的功能。       可以用到下面的场景：1，对于分布式网站，其应用服务器(如tomcat)不止一台，请求在不同的服务器跳转，">
 
 
 
@@ -120,13 +120,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2017/12/18/Java并发之死锁/"/>
+  <link rel="canonical" href="http://yoursite.com/2018/01/20/最简单的分布式session管理/"/>
 
 
 
 
 
-  <title>Java并发之死锁 | Owen's Blog</title>
+  <title>最简单的分布式session管理 | Owen's Blog</title>
   
 
 
@@ -263,7 +263,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/12/18/Java并发之死锁/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/20/最简单的分布式session管理/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Owen Yu">
@@ -280,7 +280,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Java并发之死锁</h1>
+          <h1 class="post-title" itemprop="name headline">最简单的分布式session管理</h1>
         
 
         <div class="post-meta">
@@ -292,8 +292,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-12-18T22:48:58+08:00">
-                2017-12-18
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-20T19:08:15+08:00">
+                2018-01-20
               </time>
             
 
@@ -315,8 +315,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/java/" itemprop="url" rel="index">
-                    <span itemprop="name">java</span>
+                  <a href="/categories/互联网技术/" itemprop="url" rel="index">
+                    <span itemprop="name">互联网技术</span>
                   </a>
                 </span>
 
@@ -352,22 +352,15 @@
       
 
       
-        <p>简单聊一下死锁。<br>当一个线程永远的持有一个锁，并且其他线程都尝试获得这个锁，就会发生死锁。<br>如果发生死锁，通常JVM没有办法自动恢复，只能重启。对线上系统来说，这是灾难性的。</p>
-<h1 id="死锁的发生场景、例子"><a href="#死锁的发生场景、例子" class="headerlink" title="死锁的发生场景、例子"></a>死锁的发生场景、例子</h1><p>1，最简单的例子:<br>线程A持有锁1并尝试获得锁2，线程B占有锁2并尝试获得锁1。两个线程将会永远的等待下去。  </p>
-<p>2，多个线程，持有锁的同时，尝试获得对方的锁，形成一个复杂的环状依赖。这些线程都将无限的等待。  </p>
-<p>3，两个线程以不同的顺序获得相同的锁<br>举个栗子：<br>一段转账的代码，从A账号转钱到B账号，为了保持数据一致性，操作前需要对着两个账号加锁，避免账号被同步更改而产生错误的数据。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">public void transfer(Account fromAccount,Account toAccount)&#123;</span><br><span class="line">    synchronized(fromAccount)&#123;</span><br><span class="line">        synchronized(toAccount)&#123;</span><br><span class="line">            //转账动作. </span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>上面这段代码，是什么情况下会死锁呢？<br>这样一个场景：<br>A线程：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">transfer(account1,account2)</span><br></pre></td></tr></table></figure></p>
-<p>B线程：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">transfer(account2,account1)</span><br></pre></td></tr></table></figure></p>
-<p>A获得account1的锁，等待account2的锁； B获得account2的锁，等待account1的锁。 两个线程无限的等待。<br>这就是“两个线程以不同的顺序获得相同的锁”。  </p>
-<h1 id="死锁产生的条件"><a href="#死锁产生的条件" class="headerlink" title="死锁产生的条件"></a>死锁产生的条件</h1><p>死锁的发生必须满足4个条件：<br>1，资源是不能共享的，同一资源不能被不同的线程占有<br>2，任务持有一个资源的同时，等待别的任务的资源<br>3，资源不能抢占，不能强行从其他线程抢占<br>4，产生循环等待  </p>
-<p>要发生死锁，上面的条件缺一不可。 </p>
-<h1 id="如何避免死锁"><a href="#如何避免死锁" class="headerlink" title="如何避免死锁"></a>如何避免死锁</h1><p>上面说到了死锁的发生必须要满足四个条件。<br>所以避免死锁，我们可以从这四点着手，打破其中一条即可。  </p>
-<p>在多线程下，可以从几个方面：<br>1，加锁顺序：对于同样的资源，其加锁顺序一样。<br>比如上面的转账例子，</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">transfer(account1,account2)</span><br><span class="line">transfer(account2,account1)</span><br></pre></td></tr></table></figure>
-<p>这两个调用，不管参数的顺序如何，在加锁时，保证account1,account2是同样的顺序，就一定不会有死锁。<br>具体实现，可以设计一个哈希算法，来保证加锁的顺序。代码如下，这样对于同样的账号，不管是在哪个参数传进来，其hash值大小固定，加锁顺序就一定是一样的。 <strong>问题完美解决。</strong>  </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">public void transfer(Account fromAccount,Account toAccount)&#123;</span><br><span class="line">    int fromHash = hash(fromAccount);</span><br><span class="line">    int toHash = hash(toAccount);</span><br><span class="line">    </span><br><span class="line">    if(fromHash&gt;toHash)&#123;</span><br><span class="line">        synchronized(fromAccount)&#123;</span><br><span class="line">            synchronized(toAccount)&#123;</span><br><span class="line">                //转账动作. </span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;else&#123;</span><br><span class="line">        synchronized(toAccount)&#123;</span><br><span class="line">            synchronized(fromAccount)&#123;</span><br><span class="line">                //转账动作. </span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>2，加锁时间<br>使用Lock对象来加锁， 在尝试获取锁的时候，加上时间参数，超过时间就放弃操作，避免永久等待。  </p>
+        <p>前几天和朋友讨论前后端分离和分布式session问题。<br>可以用一种最简单的办法来实现: 把用户验证信息保存在redis，设置过期时间。当用户有任何操作时，刷新redis过期时间。 超时时间内用户没有任何操作，则验证信息失效，需要重新登录。这样可以做到模拟单机环境session的功能。      </p>
+<p>可以用到下面的场景：<br>1，对于分布式网站，其应用服务器(如tomcat)不止一台，请求在不同的服务器跳转，需要保持服务器之间的session同步。<br>2，前后端分离的用户验证：前端把userId和password，提交到服务端的登录api，服务端验证正确后，生成一个token，并把token和userId，存在缓存里redis，然后把token返回给前端。前端每次的请求头中带token。  </p>
+<p>直接上代码：<br>1，保存数据到redis</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;dependency&gt;</span><br><span class="line">	&lt;groupId&gt;redis.clients&lt;/groupId&gt;</span><br><span class="line">	&lt;artifactId&gt;jedis&lt;/artifactId&gt;</span><br><span class="line">	&lt;version&gt;2.9.0&lt;/version&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * 保存key-value到redis</span><br><span class="line"> * @param key</span><br><span class="line"> * @param value</span><br><span class="line"> * @param seconds 以秒为单位</span><br><span class="line"> */</span><br><span class="line">public synchronized static void set(String key, String value, int seconds) &#123;</span><br><span class="line">    try &#123;</span><br><span class="line">        value = StringUtils.isBlank(value) ? &quot;&quot; : value;</span><br><span class="line">        Jedis jedis = getJedis();</span><br><span class="line">        jedis.setex(key, seconds, value);</span><br><span class="line">        jedis.close();</span><br><span class="line">    &#125; catch (Exception e) &#123;</span><br><span class="line">        e.printStackTrace();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>2，简单的模拟登录controller,把sessionID和用户名存到redis, 设置过期时间为10分钟。  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">@RequestMapping(&quot;/login&quot;)</span><br><span class="line">@ResponseBody</span><br><span class="line">public String login(String userName,String passwd,HttpServletRequest request)&#123;</span><br><span class="line">    if(&quot;admin&quot;.equals(userName) &amp;&amp; &quot;admin&quot;.equals(passwd))&#123;</span><br><span class="line">        HttpSession session = request.getSession();</span><br><span class="line">        RedisUtil.set( &quot;login_user_session_&quot; + session.getId(),userName,600);</span><br><span class="line">        LOGGER.debug(&quot;save the session to redis:&quot;+session.getId());</span><br><span class="line">        return &quot;hello&quot;;</span><br><span class="line">    &#125;else&#123;</span><br><span class="line">        return &quot;error&quot;;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>3, Filter刷新redis session， 当用户有操作时，刷新session。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">public void doFilter(ServletRequest sRequest, ServletResponse sResponse,</span><br><span class="line">		FilterChain filterChain) throws IOException, ServletException &#123;</span><br><span class="line">	HttpServletRequest request = (HttpServletRequest) sRequest;</span><br><span class="line">	HttpServletResponse response = (HttpServletResponse) sResponse;</span><br><span class="line">	response.setContentType(&quot;text/html;charset=utf-8&quot;);</span><br><span class="line">	response.setCharacterEncoding(&quot;utf-8&quot;);</span><br><span class="line">	request.setCharacterEncoding(&quot;utf-8&quot;);</span><br><span class="line">	HttpSession session = request.getSession();</span><br><span class="line">	LOGGER.debug(&quot; ===&gt; AccessControlFilter&quot;);</span><br><span class="line">	try&#123;</span><br><span class="line">		String path = request.getRequestURI();</span><br><span class="line">		LOGGER.debug(&quot;=======&gt;&quot;+path);</span><br><span class="line">		String redidsession = RedisUtil.get(&quot;login_user_session_&quot; + session.getId());</span><br><span class="line">		LOGGER.debug(&quot;get session[&quot;+session.getId()+&quot;] from redis:&quot;+redidsession);</span><br><span class="line">		if(redidsession!=null)&#123;</span><br><span class="line">			//refresh the session</span><br><span class="line">			RedisUtil.set(SHOP_WEB_SERVER_SESSION_ID+ &quot;_&quot; + session.getId(),redidsession,60);</span><br><span class="line">			LOGGER.debug(&quot;refresh the session to redis:&quot;+session.getId());</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		filterChain.doFilter(sRequest, sResponse);</span><br><span class="line">	&#125;catch(Exception e)&#123;</span><br><span class="line">		LOGGER.error(e.getMessage(),e);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>最简单的思路。实际的业务场景肯定比这复杂的多。灵活变化即可。  </p>
 
       
     </div>
@@ -385,7 +378,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/java/" rel="tag"># java</a>
+            <a href="/tags/互联网技术/" rel="tag"># 互联网技术</a>
           
         </div>
       
@@ -398,8 +391,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/12/17/Java并发之线程同步/" rel="next" title="Java并发之线程同步">
-                <i class="fa fa-chevron-left"></i> Java并发之线程同步
+              <a href="/2018/01/14/最近状态/" rel="next" title="最近状态">
+                <i class="fa fa-chevron-left"></i> 最近状态
               </a>
             
           </div>
@@ -407,10 +400,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/12/19/Java并发之同步工具/" rel="prev" title="Java并发之同步工具">
-                Java并发之同步工具 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -462,17 +451,8 @@
       
 
       
-        <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
-            文章目录
-          </li>
-          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
-            站点概览
-          </li>
-        </ul>
-      
 
-      <section class="site-overview-wrap sidebar-panel">
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -534,22 +514,6 @@
         </div>
       </section>
 
-      
-      <!--noindex-->
-        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
-          <div class="post-toc">
-
-            
-              
-            
-
-            
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#死锁的发生场景、例子"><span class="nav-text"><a href="#&#x6B7B;&#x9501;&#x7684;&#x53D1;&#x751F;&#x573A;&#x666F;&#x3001;&#x4F8B;&#x5B50;" class="headerlink" title="&#x6B7B;&#x9501;&#x7684;&#x53D1;&#x751F;&#x573A;&#x666F;&#x3001;&#x4F8B;&#x5B50;"></a>&#x6B7B;&#x9501;&#x7684;&#x53D1;&#x751F;&#x573A;&#x666F;&#x3001;&#x4F8B;&#x5B50;</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#死锁产生的条件"><span class="nav-text"><a href="#&#x6B7B;&#x9501;&#x4EA7;&#x751F;&#x7684;&#x6761;&#x4EF6;" class="headerlink" title="&#x6B7B;&#x9501;&#x4EA7;&#x751F;&#x7684;&#x6761;&#x4EF6;"></a>&#x6B7B;&#x9501;&#x4EA7;&#x751F;&#x7684;&#x6761;&#x4EF6;</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#如何避免死锁"><span class="nav-text"><a href="#&#x5982;&#x4F55;&#x907F;&#x514D;&#x6B7B;&#x9501;" class="headerlink" title="&#x5982;&#x4F55;&#x907F;&#x514D;&#x6B7B;&#x9501;"></a>&#x5982;&#x4F55;&#x907F;&#x514D;&#x6B7B;&#x9501;</span></a></li></ol></div>
-            
-
-          </div>
-        </section>
-      <!--/noindex-->
       
 
       
