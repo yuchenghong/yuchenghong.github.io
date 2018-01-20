@@ -75,7 +75,7 @@ public void doFilter(ServletRequest sRequest, ServletResponse sResponse,
 		LOGGER.debug("get session["+session.getId()+"] from redis:"+redidsession);
 		if(redidsession!=null){
 			//refresh the session
-			RedisUtil.set(SHOP_WEB_SERVER_SESSION_ID+ "_" + session.getId(),redidsession,60);
+			RedisUtil.set("login_user_session_" + session.getId(),redidsession,60);
 			LOGGER.debug("refresh the session to redis:"+session.getId());
 		}
 
